@@ -40,8 +40,12 @@ export default function AudioActivationBanner({ onActivated }) {
       setTimeout(onActivated, 900)
     }
 
-    btn.addEventListener('touchstart', handler)
-    return () => btn.removeEventListener('touchstart', handler)
+    btn.addEventListener('touchstart', handler, { passive: true })
+    btn.addEventListener('click', handler)
+    return () => {
+      btn.removeEventListener('touchstart', handler)
+      btn.removeEventListener('click', handler)
+    }
   }, [onActivated])
 
   const handleSkip = () => {
