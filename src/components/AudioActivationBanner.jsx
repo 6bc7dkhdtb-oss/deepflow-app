@@ -1,25 +1,39 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function AudioActivationBanner({ onActivated }) {
   const [state, setState] = useState('idle') // 'idle' | 'success'
+  const btnRef = useRef(null)
+  const activatedRef = useRef(false)
 
-  const handleActivate = () => {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)()
-    const osc = ctx.createOscillator()
-    const gain = ctx.createGain()
-    osc.connect(gain)
-    gain.connect(ctx.destination)
-    gain.gain.value = 0.3
-    osc.frequency.value = 440
-    osc.start()
-    osc.stop(ctx.currentTime + 0.5)
-    window._audioCtx = ctx
-    console.log('state after creation:', ctx.state)
+  useEffect(() => {
+    const btn = btnRef.current
+    if (!btn) return
 
-    try { localStorage.setItem('deepflow_audio_activated', 'true') } catch {}
-    setState('success')
-    setTimeout(onActivated, 900)
-  }
+    const handler = () => {
+      if (activatedRef.current) return
+      activatedRef.current = true
+
+      const ctx = new (window.AudioContext || window.webkitAudioContext)()
+      console.log('state after creation:', ctx.state)
+
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      gain.gain.value = 0.3
+      osc.frequency.value = 440
+      osc.start()
+      osc.stop(ctx.currentTime + 0.5)
+      window._audioCtx = ctx
+
+      try { localStorage.setItem('deepflow_audio_activated', 'true') } catch {}
+      setState('success')
+      setTimeout(onActivated, 900)
+    }
+
+    btn.addEventListener('touchend', handler)
+    return () => btn.removeEventListener('touchend', handler)
+  }, [onActivated])
 
   const handleSkip = () => {
     try { localStorage.setItem('deepflow_audio_activated', 'false') } catch {}
@@ -59,10 +73,10 @@ export default function AudioActivationBanner({ onActivated }) {
           </p>
         </div>
 
-        {/* Activate button */}
+        {/* Activate button — ref required for native touchend listener */}
         {state === 'idle' ? (
           <button
-            onClick={handleActivate}
+            ref={btnRef}
             className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-lg font-semibold transition-colors flex items-center justify-center gap-3"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
