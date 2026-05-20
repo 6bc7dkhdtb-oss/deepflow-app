@@ -4,11 +4,11 @@ import ToolboxPage from './components/toolbox/ToolboxPage'
 import TrainingPage from './components/training/TrainingPage'
 import AudioActivationBanner from './components/AudioActivationBanner'
 import SettingsSheet from './components/SettingsSheet'
-import { AudioManager } from './audio/AudioManager'
+import { isAudioActivated } from './audio/AudioManager'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('toolbox')
-  const [showBanner, setShowBanner] = useState(!AudioManager.isActivated())
+  const [showBanner, setShowBanner] = useState(!isAudioActivated())
   const [showSettings, setShowSettings] = useState(false)
 
   return (

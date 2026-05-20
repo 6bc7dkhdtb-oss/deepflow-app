@@ -1,11 +1,9 @@
-// Thin hook wrapper around AudioManager for backward compatibility
 import { useCallback } from 'react'
-import { AudioManager } from '../audio/AudioManager'
+import { playPhaseSound } from '../audio/AudioManager'
 
 export function useAudio() {
-  const playPhaseSound = useCallback((type) => {
-    AudioManager.playPhaseSound(type)
+  const play = useCallback((type) => {
+    playPhaseSound(type)
   }, [])
-
-  return { playPhaseSound }
+  return { playPhaseSound: play }
 }

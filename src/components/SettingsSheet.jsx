@@ -1,23 +1,21 @@
 import { useState } from 'react'
-import { AudioManager } from '../audio/AudioManager'
+import { isAudioActivated, playTestTone, initAudio } from '../audio/AudioManager'
 
 export default function SettingsSheet({ onClose }) {
   const [audioStatus, setAudioStatus] = useState(
-    AudioManager.isActivated() ? 'active' : 'inactive'
+    isAudioActivated() ? 'active' : 'inactive'
   )
   const [testState, setTestState] = useState('idle') // 'idle' | 'playing'
 
-  // SYNCHRONOUS – must be direct click handler for iOS
   const handleTestTone = () => {
-    AudioManager.playTestTone()
+    playTestTone()
     setTestState('playing')
     setTimeout(() => setTestState('idle'), 900)
   }
 
-  // SYNCHRONOUS – re-activate if somehow reset
   const handleReactivate = () => {
-    const ok = AudioManager.activate()
-    if (ok) setAudioStatus('active')
+    initAudio()
+    setAudioStatus('active')
   }
 
   return (

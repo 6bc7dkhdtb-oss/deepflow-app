@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useAudio } from '../../hooks/useAudio'
-import { AudioManager } from '../../audio/AudioManager'
+import { playEndTone } from '../../audio/AudioManager'
 
 const PHASE_COLORS = {
   in:    { ring: '#3b82f6', glow: 'rgba(59,130,246,0.35)',  label: 'text-blue-300' },
@@ -80,7 +80,7 @@ export default function BreathingTimer({ pattern, onClose }) {
           // Stop rhythm too
           clearInterval(intervalRef.current)
           setRunning(false)
-          AudioManager.playEndTone()
+          playEndTone()
           setFinished(true)
           setTimeout(() => setFinished(false), 3000)
           return 0

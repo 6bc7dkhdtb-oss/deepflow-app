@@ -1,52 +1,15 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState } from 'react'
+import { initAudio } from '../audio/AudioManager'
 
 export default function AudioActivationBanner({ onActivated }) {
   const [state, setState] = useState('idle') // 'idle' | 'success'
-  const btnRef = useRef(null)
-  const activatedRef = useRef(false)
 
-  useEffect(() => {
-    const btn = btnRef.current
-    if (!btn) return
-
-    const handler = () => {
-      console.log('touchstart fired')
-      if (activatedRef.current) return
-      activatedRef.current = true
-
-      const ctx = new (window.AudioContext || window.webkitAudioContext)()
-
-      // iOS Safari hack: play a silent 1-sample buffer immediately.
-      // This unlocks the context more reliably than resume() alone.
-      const buf = ctx.createBuffer(1, 1, 22050)
-      const src = ctx.createBufferSource()
-      src.buffer = buf
-      src.connect(ctx.destination)
-      src.start(0)
-      console.log('ctx.state after silent buffer:', ctx.state)
-
-      const osc = ctx.createOscillator()
-      const gain = ctx.createGain()
-      osc.connect(gain)
-      gain.connect(ctx.destination)
-      gain.gain.value = 0.3
-      osc.frequency.value = 440
-      osc.start()
-      osc.stop(ctx.currentTime + 0.5)
-      window._audioCtx = ctx
-
-      try { localStorage.setItem('deepflow_audio_activated', 'true') } catch {}
-      setState('success')
-      setTimeout(onActivated, 900)
-    }
-
-    btn.addEventListener('touchstart', handler, { passive: true })
-    btn.addEventListener('click', handler)
-    return () => {
-      btn.removeEventListener('touchstart', handler)
-      btn.removeEventListener('click', handler)
-    }
-  }, [onActivated])
+  const handleActivate = () => {
+    initAudio()
+    if (state !== 'idle') return
+    setState('success')
+    setTimeout(onActivated, 900)
+  }
 
   const handleSkip = () => {
     try { localStorage.setItem('deepflow_audio_activated', 'false') } catch {}
@@ -91,10 +54,11 @@ export default function AudioActivationBanner({ onActivated }) {
           📢 <span className="font-semibold">Stummschalter ausschalten</span> für Töne
         </div>
 
-        {/* Activate button — ref required for native touchstart listener */}
+        {/* Activate button */}
         {state === 'idle' ? (
           <button
-            ref={btnRef}
+            onClick={handleActivate}
+            onTouchStart={handleActivate}
             className="w-full py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-lg font-semibold transition-colors flex items-center justify-center gap-3"
           >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
