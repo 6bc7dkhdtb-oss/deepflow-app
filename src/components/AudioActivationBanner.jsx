@@ -1,21 +1,27 @@
 import { useState } from 'react'
-import { AudioManager } from '../audio/AudioManager'
 
 export default function AudioActivationBanner({ onActivated }) {
   const [state, setState] = useState('idle') // 'idle' | 'success'
 
-  // SYNCHRONOUS handler – no async, no await.
-  // iOS Safari only unlocks audio within this call stack.
   const handleActivate = () => {
-    const ok = AudioManager.activate() // creates ctx + resume() + ping, all sync
-    if (ok) {
-      setState('success')
-      setTimeout(onActivated, 900)
-    }
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    const osc = ctx.createOscillator()
+    const gain = ctx.createGain()
+    osc.connect(gain)
+    gain.connect(ctx.destination)
+    gain.gain.value = 0.3
+    osc.frequency.value = 440
+    osc.start()
+    osc.stop(ctx.currentTime + 0.5)
+    window._audioCtx = ctx
+    console.log('state after creation:', ctx.state)
+
+    try { localStorage.setItem('deepflow_audio_activated', 'true') } catch {}
+    setState('success')
+    setTimeout(onActivated, 900)
   }
 
   const handleSkip = () => {
-    // Store preference so banner doesn't show again, but audio stays locked
     try { localStorage.setItem('deepflow_audio_activated', 'false') } catch {}
     onActivated()
   }
@@ -76,7 +82,7 @@ export default function AudioActivationBanner({ onActivated }) {
           </div>
         )}
 
-        {/* Wave indicator (visible feedback that something happened) */}
+        {/* Wave indicator */}
         {state === 'success' && (
           <div className="flex justify-center gap-1.5 animate-pulse">
             {[3, 5, 8, 5, 3].map((h, i) => (
