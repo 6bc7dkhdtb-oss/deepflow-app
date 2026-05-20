@@ -73,6 +73,7 @@ export const exercises = [
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Das Dreieck besteht aus drei gleichmäßigen Phasen: Einatmen – Ausatmen – Pause. Die Pause nach dem Ausatmen (Leerhalten) aktiviert gezielt den Vagusnerv und bremst das Nervensystem.',
     timerPattern: {
+      defaultDuration: 300,
       phases: [
         { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Ruhig durch die Nase einatmen' },
         { name: 'Ausatmen', type: 'out', duration: 4, color: 'indigo', instruction: 'Sanft durch den Mund ausatmen' },
@@ -119,6 +120,7 @@ export const exercises = [
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Bei 5–6 Atemzügen pro Minute (ca. 5,5 Sek ein, 5,5 Sek aus) tritt das Herz in einen Kohärenz-Zustand. Herzrhythmus, Atmung und Gehirnwellen synchronisieren sich – das erzeugt tiefe Ruhe bei gleichzeitiger Wachheit.',
     timerPattern: {
+      defaultDuration: 300,
       phases: [
         { name: 'Einatmen', type: 'in', duration: 5.5, color: 'blue', instruction: 'Sanft und gleichmäßig einatmen' },
         { name: 'Ausatmen', type: 'out', duration: 5.5, color: 'teal', instruction: 'Vollständig und entspannt ausatmen' },
@@ -165,6 +167,7 @@ export const exercises = [
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Die Boxatmung (Navy SEAL Technik) besteht aus vier gleichen Phasen à 4 Sekunden. Sie reguliert das Nervensystem, schärft den Fokus und wird von Einsatzkräften zur Stressregulation eingesetzt.',
     timerPattern: {
+      defaultDuration: 240,
       phases: [
         { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Tief durch die Nase einatmen' },
         { name: 'Halten', type: 'hold', duration: 4, color: 'cyan', instruction: 'Atem oben halten – entspannt' },
@@ -217,6 +220,7 @@ export const exercises = [
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Die Buteyko-Methode trainiert das Atmen durch die Nase und reduziert das Atemvolumen. Die verlängerte Ausatmung und Pause senkt die Atemfrequenz, erhöht die CO₂-Toleranz und aktiviert tiefe Entspannung.',
     timerPattern: {
+      defaultDuration: 600,
       phases: [
         { name: 'Einatmen', type: 'in', duration: 3.5, color: 'teal', instruction: 'Ruhig und leise durch die Nase' },
         { name: 'Ausatmen', type: 'out', duration: 6, color: 'indigo', instruction: 'Sanft und vollständig ausatmen' },
@@ -496,6 +500,7 @@ export const exercises = [
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Die 4-7-8 Atmung (nach Dr. Andrew Weil) ist eine der wirksamsten Techniken zum Einschlafen. Die lange Ausatmung und das ausgedehnte Halten beruhigen das Nervensystem in Minuten.',
     timerPattern: {
+      defaultDuration: 240,
       phases: [
         { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Ruhig durch die Nase' },
         { name: 'Halten', type: 'hold', duration: 7, color: 'indigo', instruction: 'Atem oben sanft halten' },

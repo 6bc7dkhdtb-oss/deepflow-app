@@ -56,6 +56,29 @@ export const AudioManager = {
     })
   },
 
+  // Three descending tones to signal end of session
+  playEndTone() {
+    const ctx = getCtx()
+    if (!ctx || ctx.state === 'closed') return
+    const freqs = [880, 660, 440]
+    freqs.forEach((f, i) => {
+      try {
+        const t = ctx.currentTime + i * 0.5
+        const osc = ctx.createOscillator()
+        const gain = ctx.createGain()
+        osc.type = 'sine'
+        osc.frequency.value = f
+        gain.gain.setValueAtTime(0, t)
+        gain.gain.linearRampToValueAtTime(0.35, t + 0.02)
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.4)
+        osc.connect(gain)
+        gain.connect(ctx.destination)
+        osc.start(t)
+        osc.stop(t + 0.42)
+      } catch {}
+    })
+  },
+
   playPhaseSound(type) {
     const map = {
       in:    [528, 0.30, 0.22],
