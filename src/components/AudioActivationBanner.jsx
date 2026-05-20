@@ -10,11 +10,11 @@ export default function AudioActivationBanner({ onActivated }) {
     if (!btn) return
 
     const handler = () => {
+      console.log('touchstart fired')
       if (activatedRef.current) return
       activatedRef.current = true
 
       const ctx = new (window.AudioContext || window.webkitAudioContext)()
-      console.log('state after creation:', ctx.state)
 
       // iOS Safari hack: play a silent 1-sample buffer immediately.
       // This unlocks the context more reliably than resume() alone.
@@ -23,7 +23,7 @@ export default function AudioActivationBanner({ onActivated }) {
       src.buffer = buf
       src.connect(ctx.destination)
       src.start(0)
-      console.log('state after silent buffer play:', ctx.state)
+      console.log('ctx.state after silent buffer:', ctx.state)
 
       const osc = ctx.createOscillator()
       const gain = ctx.createGain()
@@ -87,7 +87,7 @@ export default function AudioActivationBanner({ onActivated }) {
           📢 <span className="font-semibold">Stummschalter ausschalten</span> für Töne
         </div>
 
-        {/* Activate button — ref required for native touchend listener */}
+        {/* Activate button — ref required for native touchstart listener */}
         {state === 'idle' ? (
           <button
             ref={btnRef}
