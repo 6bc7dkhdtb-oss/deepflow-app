@@ -82,6 +82,11 @@ export default function AudioActivationBanner({ onActivated }) {
           </p>
         </div>
 
+        {/* Mute switch warning */}
+        <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-300 leading-snug">
+          📢 Stelle sicher dass der <span className="font-semibold">Stummschalter</span> deines iPhones ausgeschaltet ist
+        </div>
+
         {/* Activate button — ref required for native touchend listener */}
         {state === 'idle' ? (
           <button
