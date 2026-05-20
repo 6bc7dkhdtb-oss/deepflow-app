@@ -12,8 +12,28 @@ export function initAudio() {
   try { localStorage.setItem('deepflow_audio_activated', 'true') } catch {}
 }
 
+export function resumeAudio() {
+  if (audioCtx && audioCtx.state === 'suspended') {
+    return audioCtx.resume().catch(() => {})
+  }
+  return Promise.resolve()
+}
+
+export function isAudioSuspended() {
+  return !!audioCtx && audioCtx.state === 'suspended'
+}
+
+export function isAudioActivated() {
+  try { return localStorage.getItem('deepflow_audio_activated') === 'true' } catch { return false }
+}
+
 function scheduleTone(frequency, duration, volume, delay = 0) {
   if (!audioCtx) return
+  // Best-effort resume before scheduling (works on Android/desktop;
+  // on iOS only a direct user gesture will succeed)
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().catch(() => {})
+  }
   try {
     const t = audioCtx.currentTime + delay
     const osc = audioCtx.createOscillator()
@@ -56,6 +76,13 @@ export function playTestTone() {
   })
 }
 
-export function isAudioActivated() {
-  try { return localStorage.getItem('deepflow_audio_activated') === 'true' } catch { return false }
+// Auto-resume when page comes back to foreground
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && audioCtx) {
+      audioCtx.resume().catch(() => {})
+    }
+  })
+  window.addEventListener('pageshow', () => { if (audioCtx) audioCtx.resume().catch(() => {}) })
+  window.addEventListener('focus',    () => { if (audioCtx) audioCtx.resume().catch(() => {}) })
 }

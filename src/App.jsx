@@ -1,15 +1,34 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navigation from './components/Navigation'
 import ToolboxPage from './components/toolbox/ToolboxPage'
 import TrainingPage from './components/training/TrainingPage'
 import AudioActivationBanner from './components/AudioActivationBanner'
 import SettingsSheet from './components/SettingsSheet'
-import { isAudioActivated } from './audio/AudioManager'
+import { isAudioActivated, isAudioSuspended, resumeAudio } from './audio/AudioManager'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('toolbox')
   const [showBanner, setShowBanner] = useState(!isAudioActivated())
   const [showSettings, setShowSettings] = useState(false)
+  const [audioSuspended, setAudioSuspended] = useState(false)
+
+  useEffect(() => {
+    const checkAudio = () => {
+      setAudioSuspended(isAudioSuspended())
+    }
+    document.addEventListener('visibilitychange', checkAudio)
+    window.addEventListener('pageshow', checkAudio)
+    window.addEventListener('focus', checkAudio)
+    return () => {
+      document.removeEventListener('visibilitychange', checkAudio)
+      window.removeEventListener('pageshow', checkAudio)
+      window.removeEventListener('focus', checkAudio)
+    }
+  }, [])
+
+  const handleResumeAudio = () => {
+    resumeAudio().then(() => setAudioSuspended(false))
+  }
 
   return (
     <div className="min-h-full max-w-lg mx-auto relative">
@@ -28,6 +47,19 @@ export default function App() {
       </div>
 
       <Navigation active={activeTab} onChange={setActiveTab} onSettings={() => setShowSettings(true)} />
+
+      {/* Resume button — floats above nav when AudioContext is suspended */}
+      {audioSuspended && !showBanner && (
+        <div className="fixed bottom-20 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none">
+          <button
+            onClick={handleResumeAudio}
+            onTouchStart={handleResumeAudio}
+            className="pointer-events-auto flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/90 backdrop-blur-sm text-white text-sm font-medium shadow-lg shadow-black/30 active:bg-amber-600 transition-colors"
+          >
+            🔊 Ton neu aktivieren
+          </button>
+        </div>
+      )}
 
       {showBanner && <AudioActivationBanner onActivated={() => setShowBanner(false)} />}
       {showSettings && <SettingsSheet onClose={() => setShowSettings(false)} />}
