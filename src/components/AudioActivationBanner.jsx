@@ -16,6 +16,15 @@ export default function AudioActivationBanner({ onActivated }) {
       const ctx = new (window.AudioContext || window.webkitAudioContext)()
       console.log('state after creation:', ctx.state)
 
+      // iOS Safari hack: play a silent 1-sample buffer immediately.
+      // This unlocks the context more reliably than resume() alone.
+      const buf = ctx.createBuffer(1, 1, 22050)
+      const src = ctx.createBufferSource()
+      src.buffer = buf
+      src.connect(ctx.destination)
+      src.start(0)
+      console.log('state after silent buffer play:', ctx.state)
+
       const osc = ctx.createOscillator()
       const gain = ctx.createGain()
       osc.connect(gain)
@@ -31,8 +40,8 @@ export default function AudioActivationBanner({ onActivated }) {
       setTimeout(onActivated, 900)
     }
 
-    btn.addEventListener('touchend', handler)
-    return () => btn.removeEventListener('touchend', handler)
+    btn.addEventListener('touchstart', handler)
+    return () => btn.removeEventListener('touchstart', handler)
   }, [onActivated])
 
   const handleSkip = () => {
