@@ -35,21 +35,28 @@ export const AudioManager = {
   // iOS Safari only honours the user-gesture unlock within this window.
   activate() {
     try {
-      if (!ctx) {
-        ctx = new (window.AudioContext || window.webkitAudioContext)()
-      }
-      // Call resume() synchronously – do NOT await.
-      // iOS processes the gesture-unlock synchronously even though
-      // the returned Promise resolves asynchronously.
-      ctx.resume()
+      ctx = new (window.AudioContext || window.webkitAudioContext)()
 
-      // Immediately schedule a confirmation ping.
-      // Works because iOS sets ctx.currentTime correctly right after resume().
-      this.playPing()
+      console.log('[AudioManager] ctx.state before resume():', ctx.state)
+      ctx.resume()
+      console.log('[AudioManager] ctx.state after resume():', ctx.state)
+
+      // Play confirmation tone using the exact minimal pattern.
+      // Do NOT go through _ready() / state check – on iOS the state is still
+      // 'suspended' here even though the gesture unlock was registered.
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      osc.connect(gain)
+      gain.connect(ctx.destination)
+      osc.frequency.value = 440
+      gain.gain.value = 0.3
+      osc.start(ctx.currentTime)
+      osc.stop(ctx.currentTime + 0.5)
 
       localStorage.setItem(STORAGE_KEY, 'true')
       return true
-    } catch {
+    } catch (e) {
+      console.error('[AudioManager] activate() error:', e)
       return false
     }
   },
@@ -103,9 +110,10 @@ export const AudioManager = {
     if (ctx.state === 'suspended') {
       // Non-gesture path: attempt resume (works Android, silent on iOS)
       ctx.resume().catch(() => {})
-      return false
     }
-    return ctx.state === 'running'
+    // Allow 'suspended' through — on iOS the gesture unlock is registered even
+    // while state still reads 'suspended', so audio scheduled now will play.
+    return ctx.state !== 'closed'
   },
 }
 
