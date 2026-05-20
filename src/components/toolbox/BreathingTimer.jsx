@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useAudio, unlockAudioContext } from '../../hooks/useAudio'
+import { useAudio } from '../../hooks/useAudio'
 
 const PHASE_COLORS = {
   in: { ring: '#3b82f6', glow: 'rgba(59,130,246,0.35)', label: 'text-blue-300' },
@@ -13,7 +13,6 @@ export default function BreathingTimer({ pattern, onClose }) {
   const [phaseIndex, setPhaseIndex] = useState(0)
   const [elapsed, setElapsed] = useState(0)
   const [cycleCount, setCycleCount] = useState(0)
-  const [audioUnlocking, setAudioUnlocking] = useState(false)
   const intervalRef = useRef(null)
   const { playPhaseSound } = useAudio()
 
@@ -49,13 +48,8 @@ export default function BreathingTimer({ pattern, onClose }) {
     return () => clearInterval(intervalRef.current)
   }, [running, phaseDuration, nextPhase])
 
-  const toggle = async () => {
+  const toggle = () => {
     if (!running) {
-      // Unlock AudioContext within the user gesture (required by iOS Safari).
-      // Show a brief indicator while resume() resolves (~10ms).
-      setAudioUnlocking(true)
-      await unlockAudioContext()
-      setAudioUnlocking(false)
       playPhaseSound(currentPhase.type)
     }
     setRunning(r => !r)
@@ -176,16 +170,10 @@ export default function BreathingTimer({ pattern, onClose }) {
 
         <button
           onClick={toggle}
-          disabled={audioUnlocking}
-          className="w-16 h-16 rounded-full flex items-center justify-center text-white transition-all disabled:opacity-70"
+          className="w-16 h-16 rounded-full flex items-center justify-center text-white transition-all"
           style={{ background: `linear-gradient(135deg, ${colors.ring}, ${colors.ring}99)` }}
         >
-          {audioUnlocking ? (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              className="w-6 h-6 animate-spin">
-              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-            </svg>
-          ) : running ? (
+          {running ? (
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
               <rect x="6" y="4" width="4" height="16" />
               <rect x="14" y="4" width="4" height="16" />

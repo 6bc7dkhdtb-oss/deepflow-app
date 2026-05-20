@@ -2,9 +2,14 @@ import { useState } from 'react'
 import Navigation from './components/Navigation'
 import ToolboxPage from './components/toolbox/ToolboxPage'
 import TrainingPage from './components/training/TrainingPage'
+import AudioActivationBanner from './components/AudioActivationBanner'
+import SettingsSheet from './components/SettingsSheet'
+import { AudioManager } from './audio/AudioManager'
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('toolbox')
+  const [showBanner, setShowBanner] = useState(!AudioManager.isActivated())
+  const [showSettings, setShowSettings] = useState(false)
 
   return (
     <div className="min-h-full max-w-lg mx-auto relative">
@@ -22,7 +27,10 @@ export default function App() {
         {activeTab === 'training' && <TrainingPage />}
       </div>
 
-      <Navigation active={activeTab} onChange={setActiveTab} />
+      <Navigation active={activeTab} onChange={setActiveTab} onSettings={() => setShowSettings(true)} />
+
+      {showBanner && <AudioActivationBanner onActivated={() => setShowBanner(false)} />}
+      {showSettings && <SettingsSheet onClose={() => setShowSettings(false)} />}
     </div>
   )
 }
