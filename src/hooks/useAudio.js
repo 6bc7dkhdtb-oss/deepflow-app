@@ -1,9 +1,23 @@
 import { useCallback } from 'react'
-import { playPhaseSound } from '../audio/AudioManager'
+import {
+  playPhaseSound,
+  playStepCue,
+  playRoundCue,
+  playEndTone,
+  playTone,
+} from '../audio/AudioManager'
 
 export function useAudio() {
-  const play = useCallback((type) => {
-    playPhaseSound(type)
-  }, [])
-  return { playPhaseSound: play }
+  const phase = useCallback((type) => playPhaseSound(type), [])
+  const step = useCallback(() => playStepCue(), [])
+  const round = useCallback((kind) => playRoundCue(kind), [])
+  const end = useCallback(() => playEndTone(), [])
+  const tone = useCallback((freq, dur, vol) => playTone(freq, dur, vol), [])
+  return {
+    playPhaseSound: phase,
+    playStepCue: step,
+    playRoundCue: round,
+    playEndTone: end,
+    playTone: tone,
+  }
 }

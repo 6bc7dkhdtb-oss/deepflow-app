@@ -2,9 +2,12 @@ import { useState } from 'react'
 import { CATEGORY_COLORS } from '../../data/exercises'
 import BreathingTimer from './BreathingTimer'
 import AudioPlayer from './AudioPlayer'
+import GuidedSequenceTimer from './GuidedSequenceTimer'
+import BrustkorbStageGuide from './BrustkorbStageGuide'
 
 export default function ExerciseDetail({ exercise, onBack }) {
   const [showTimer, setShowTimer] = useState(false)
+  const [showGuided, setShowGuided] = useState(false)
   const [openStep, setOpenStep] = useState(null)
   const colors = CATEGORY_COLORS[exercise.category]
 
@@ -39,6 +42,52 @@ export default function ExerciseDetail({ exercise, onBack }) {
             </div>
           </div>
         </div>
+
+        {/* Audio Player */}
+        {exercise.audioFile && (
+          <AudioPlayer src={exercise.audioFile} title={exercise.name} />
+        )}
+
+        {/* Guided sequence (DeepFlow Methode) */}
+        {exercise.guidedSequence && (
+          <div className="rounded-2xl border border-indigo-700/40 bg-indigo-950/20 overflow-hidden">
+            <button
+              onClick={() => setShowGuided(s => !s)}
+              className="w-full flex items-center justify-between px-4 py-3.5"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-indigo-600/30 flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-indigo-300">
+                    <path d="M12 2v6M12 16v6M2 12h6M16 12h6M5 5l4 4M15 15l4 4M5 19l4-4M15 9l4-4" />
+                  </svg>
+                </div>
+                <div className="text-left">
+                  <p className="text-sm font-medium text-indigo-300">Geführte Sequenz starten</p>
+                  <p className="text-xs text-slate-500">
+                    {exercise.guidedSequence.stages.length} Stufen · {exercise.guidedSequence.totalLabel}
+                  </p>
+                </div>
+              </div>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={`w-4 h-4 text-slate-400 transition-transform ${showGuided ? 'rotate-180' : ''}`}
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {showGuided && (
+              <div className="px-4 pb-4 border-t border-indigo-700/30">
+                <GuidedSequenceTimer
+                  sequence={exercise.guidedSequence}
+                  onClose={() => setShowGuided(false)}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Breathing Timer */}
         {exercise.hasTimer && exercise.timerPattern && (
@@ -82,42 +131,52 @@ export default function ExerciseDetail({ exercise, onBack }) {
           </div>
         )}
 
-        {/* Steps */}
-        <div>
-          <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
-            Schritt-für-Schritt Anleitung
-          </h2>
-          <div className="space-y-2">
-            {exercise.steps.map((step, i) => (
-              <button
-                key={i}
-                onClick={() => setOpenStep(openStep === i ? null : i)}
-                className="w-full text-left rounded-xl border border-slate-700/50 bg-slate-800/40 overflow-hidden"
-              >
-                <div className="flex items-center gap-3 px-4 py-3.5">
-                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${colors.bg} ${colors.text}`}>
-                    {i + 1}
-                  </span>
-                  <span className="text-sm font-medium text-slate-200 flex-1">{step.title}</span>
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    className={`w-4 h-4 text-slate-500 transition-transform flex-shrink-0 ${openStep === i ? 'rotate-180' : ''}`}
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </div>
-                {openStep === i && (
-                  <div className="px-4 pb-4">
-                    <p className="text-sm text-slate-300 leading-relaxed">{step.text}</p>
-                  </div>
-                )}
-              </button>
-            ))}
+        {/* Brustkorbdehnung – Stufenwahl + geführte Anleitung */}
+        {exercise.stages && (
+          <div className="rounded-2xl border border-cyan-700/40 bg-cyan-950/20 p-4">
+            <p className="text-xs uppercase tracking-widest text-cyan-300 font-semibold mb-3">Geführte Stufen</p>
+            <BrustkorbStageGuide stages={exercise.stages} />
           </div>
-        </div>
+        )}
+
+        {/* Steps (only if no stages) */}
+        {!exercise.stages && (
+          <div>
+            <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
+              Schritt-für-Schritt Anleitung
+            </h2>
+            <div className="space-y-2">
+              {exercise.steps?.map((step, i) => (
+                <button
+                  key={i}
+                  onClick={() => setOpenStep(openStep === i ? null : i)}
+                  className="w-full text-left rounded-xl border border-slate-700/50 bg-slate-800/40 overflow-hidden"
+                >
+                  <div className="flex items-center gap-3 px-4 py-3.5">
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${colors.bg} ${colors.text}`}>
+                      {i + 1}
+                    </span>
+                    <span className="text-sm font-medium text-slate-200 flex-1">{step.title}</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className={`w-4 h-4 text-slate-500 transition-transform flex-shrink-0 ${openStep === i ? 'rotate-180' : ''}`}
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </div>
+                  {openStep === i && (
+                    <div className="px-4 pb-4">
+                      <p className="text-sm text-slate-300 leading-relaxed">{step.text}</p>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Tips */}
         {exercise.tips && exercise.tips.length > 0 && (
@@ -141,8 +200,6 @@ export default function ExerciseDetail({ exercise, onBack }) {
           </div>
         )}
 
-        {/* Audio Player */}
-        <AudioPlayer />
       </div>
     </div>
   )

@@ -1,6 +1,16 @@
 import { useState, useRef, useEffect } from 'react'
+import { resumeAudio } from '../../audio/AudioManager'
 
-export default function AudioPlayer() {
+// Resolve an /audio/... path against Vite's BASE_URL so it works on gh-pages.
+function resolveSrc(src) {
+  if (!src) return null
+  if (/^[a-z]+:\/\//i.test(src) || src.startsWith('blob:') || src.startsWith('data:')) return src
+  const base = import.meta.env.BASE_URL || '/'
+  const cleaned = src.replace(/^\//, '')
+  return base.endsWith('/') ? base + cleaned : base + '/' + cleaned
+}
+
+export default function AudioPlayer({ src, title }) {
   const [file, setFile] = useState(null)
   const [playing, setPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
@@ -8,6 +18,10 @@ export default function AudioPlayer() {
   const [volume, setVolume] = useState(0.7)
   const audioRef = useRef(null)
   const fileInputRef = useRef(null)
+
+  const resolvedSrc = resolveSrc(src)
+  const activeSrc = resolvedSrc || (file ? file.url : null)
+  const activeName = title || (file ? file.name : null)
 
   useEffect(() => {
     const audio = audioRef.current
@@ -23,7 +37,17 @@ export default function AudioPlayer() {
       audio.removeEventListener('loadedmetadata', onLoaded)
       audio.removeEventListener('ended', onEnded)
     }
-  }, [file])
+  }, [activeSrc])
+
+  useEffect(() => {
+    if (resolvedSrc && audioRef.current) {
+      audioRef.current.src = resolvedSrc
+      audioRef.current.load()
+      setCurrentTime(0)
+      setDuration(0)
+      setPlaying(false)
+    }
+  }, [resolvedSrc])
 
   const handleFileChange = (e) => {
     const f = e.target.files[0]
@@ -40,13 +64,22 @@ export default function AudioPlayer() {
 
   const togglePlay = () => {
     const audio = audioRef.current
-    if (!audio || !file) return
+    if (!audio || !activeSrc) return
     if (playing) {
       audio.pause()
+      setPlaying(false)
     } else {
-      audio.play()
+      resumeAudio()
+      const p = audio.play()
+      if (p && typeof p.then === 'function') {
+        p.then(() => setPlaying(true)).catch(err => {
+          console.warn('Audio play blocked:', err)
+          setPlaying(false)
+        })
+      } else {
+        setPlaying(true)
+      }
     }
-    setPlaying(!playing)
   }
 
   const handleSeek = (e) => {
@@ -76,12 +109,17 @@ export default function AudioPlayer() {
           <circle cx="6" cy="18" r="3" />
           <circle cx="18" cy="16" r="3" />
         </svg>
-        <span className="text-sm font-medium text-slate-300">Audio Player</span>
+        <span className="text-sm font-medium text-slate-300">Geführtes Audio</span>
       </div>
 
-      <audio ref={audioRef} />
+      <audio
+        ref={audioRef}
+        preload="metadata"
+        playsInline
+        webkit-playsinline="true"
+      />
 
-      {!file ? (
+      {!activeSrc ? (
         <button
           onClick={() => fileInputRef.current?.click()}
           className="w-full py-4 border-2 border-dashed border-slate-600 rounded-lg text-slate-400 text-sm hover:border-blue-500/50 hover:text-blue-300 transition-colors flex flex-col items-center gap-2"
@@ -113,24 +151,25 @@ export default function AudioPlayer() {
               )}
             </button>
             <div className="min-w-0 flex-1">
-              <p className="text-sm text-slate-200 truncate">{file.name}</p>
+              <p className="text-sm text-slate-200 truncate">{activeName}</p>
               <p className="text-xs text-slate-500">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </p>
             </div>
-            <button
-              onClick={() => fileInputRef.current?.click()}
-              className="text-slate-500 hover:text-slate-300 transition-colors"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="17 8 12 3 7 8" />
-                <line x1="12" y1="3" x2="12" y2="15" />
-              </svg>
-            </button>
+            {!src && (
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="text-slate-500 hover:text-slate-300 transition-colors"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="17 8 12 3 7 8" />
+                  <line x1="12" y1="3" x2="12" y2="15" />
+                </svg>
+              </button>
+            )}
           </div>
 
-          {/* Seek bar */}
           <input
             type="range"
             min="0"
@@ -141,7 +180,6 @@ export default function AudioPlayer() {
             className="w-full h-1.5 rounded-full appearance-none bg-slate-600 accent-blue-500"
           />
 
-          {/* Volume */}
           <div className="flex items-center gap-2">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5 text-slate-500 flex-shrink-0">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
@@ -160,7 +198,9 @@ export default function AudioPlayer() {
         </div>
       )}
 
-      <input ref={fileInputRef} type="file" accept="audio/*" className="hidden" onChange={handleFileChange} />
+      {!src && (
+        <input ref={fileInputRef} type="file" accept="audio/*" className="hidden" onChange={handleFileChange} />
+      )}
     </div>
   )
 }

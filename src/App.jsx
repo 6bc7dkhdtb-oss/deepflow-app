@@ -41,7 +41,7 @@ export default function App() {
       </div>
 
       {/* Page content */}
-      <div className="relative z-0">
+      <div className="relative">
         {activeTab === 'toolbox' && <ToolboxPage />}
         {activeTab === 'training' && <TrainingPage />}
       </div>

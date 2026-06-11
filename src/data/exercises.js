@@ -26,9 +26,18 @@ export const exercises = [
     duration: '4–5 Minuten',
     shortDesc: 'Aktivierend – Energie & mentale Schärfe durch vollständige Atemzyklen',
     icon: '⚡',
-    hasTimer: false,
+    hasTimer: true,
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Die Zyklische Vollatmung aktiviert deinen gesamten Körper und füllt die Lungen vollständig. Der kleine Extra-Atemzug am Ende stimuliert das sympathische Nervensystem und erzeugt sofortige Wachheit.',
+    timerPattern: {
+      defaultDuration: 300,
+      phases: [
+        { name: 'Einatmen Bauch', type: 'in',    duration: 3, color: 'blue',   instruction: 'Bauch nach vorne schieben – Zwerchfellatmung' },
+        { name: 'Einatmen Brust', type: 'in',    duration: 2, color: 'blue',   instruction: 'Brust nach oben weiten – Lungen voll füllen' },
+        { name: 'Extra-Atemzug',  type: 'extra', duration: 1, color: 'cyan',   instruction: 'Kleinen Schluck Luft obendrauf' },
+        { name: 'Passiv ausatmen',type: 'out',   duration: 4, color: 'indigo', instruction: 'Loslassen – kein aktives Pressen' },
+      ],
+    },
     steps: [
       {
         title: 'Vorbereitung',
@@ -267,6 +276,17 @@ export const exercises = [
     hasTimer: false,
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Die DeepFlow Methode ist die Kernübung aus dem Buch. Sie kombiniert sechs Techniken zu einer 10-minütigen Sequenz, die dich in einen tiefen Meditationszustand führt – mit abschließendem Atemanhalten für maximale innere Stille.',
+    guidedSequence: {
+      totalLabel: '~10 Min',
+      stages: [
+        { name: 'Zyklische Vollatmung', duration: 120, color: 'orange', short: 'Aktiviere Körper & Geist', long: 'Tief ein: Bauch → Brust → Extra-Atemzug. Passiv aus. Kontinuierlicher, fließender Rhythmus.' },
+        { name: 'Dreiecksatmung',       duration: 120, color: 'teal',   short: 'Aktivierung balancieren', long: 'Einatmen – Ausatmen – Pause nach Ausatmen. Gleiche Längen (4–5 Sek). Bringt das Nervensystem in Balance.' },
+        { name: 'Positive Emotion',     duration: 60,  color: 'pink',   short: 'Erinnerung aktivieren', long: 'Rufe eine starke positive Erinnerung auf. Visualisiere Details, spüre das Gefühl im Herzbereich. Verankere es.' },
+        { name: 'Kohärenzatmung',       duration: 180, color: 'blue',   short: 'Herz & Atem synchronisieren', long: '5,5 Sek ein, 5,5 Sek aus. Atme durch das Herz. Halte das positive Gefühl präsent.' },
+        { name: 'Intention setzen',     duration: 60,  color: 'amber',  short: 'Absicht verankern', long: '"Heute möchte ich …" – ein klarer Satz. Atme weiter ruhig. Wiederhole die Intention 3–4 Mal innerlich.' },
+        { name: 'Atemanhalten',         duration: 60,  color: 'purple', short: 'In die Stille tauchen', long: 'Tief einatmen, vollständig ausatmen, dann halten. So lange angenehm – maximal bis zum ersten starken Reiz.' },
+      ],
+    },
     steps: [
       {
         title: 'Stufe 1: Zyklische Vollatmung (2 Min)',
@@ -309,6 +329,7 @@ export const exercises = [
     shortDesc: 'Systematischer Körperscan – Bewusstsein und Entspannung von Kopf bis Fuß',
     icon: '⬡',
     hasTimer: false,
+    audioFile: '/audio/Body%20Scan.mp3',
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Der Bodyscan ist eine klassische Achtsamkeitsmeditation, die Körperbewusstsein und Entspannung verbindet. Du wanderst mit deiner Aufmerksamkeit durch den Körper, nimmst wahr – und lässt los.',
     steps: [
@@ -405,6 +426,7 @@ export const exercises = [
     shortDesc: 'Positive Erinnerungen aktivieren und im Körper verankern – emotionaler Reset',
     icon: '✦',
     hasTimer: false,
+    audioFile: '/audio/Imagination%20positiver%20Emotionen.mp3',
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Emotionen sind körperliche Zustände. Du kannst sie bewusst erzeugen – unabhängig von äußeren Umständen. Diese Übung trainiert die Fähigkeit, positive innere Zustände auf Abruf zu aktivieren.',
     steps: [
@@ -542,11 +564,100 @@ export const exercises = [
     name: 'Brustkorbdehnung',
     category: 'apnoe',
     duration: '10–15 Minuten',
-    shortDesc: 'Drei Dehnungsübungen für mehr Lungenvolumen – Uddiyana Bandha und Seitdehnungen',
+    shortDesc: 'Drei Dehnungsübungen in 3 Stufen – Uddiyana Bandha, Seitdehnung, Brustöffner',
     icon: '❋',
     hasTimer: false,
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Ein flexibler Brustkorb ist die Voraussetzung für große Lungenvolumina. Diese drei Übungen dehnen Zwerchfell, Rippenmuskeln und Brustwirbelsäule systematisch – und erhöhen direkt das nutzbare Atemvolumen.',
+    stages: [
+      {
+        id: 1,
+        name: 'Stufe 1 – Einstieg',
+        duration: '8–10 Min',
+        description: 'Grundpositionen mit Abstützung. Lerne die Bewegung kennen.',
+        color: 'cyan',
+        steps: [
+          {
+            title: 'Uddiyana Bandha – Grundposition',
+            duration: 90,
+            text: 'Stehe aufrecht, Füße schulterbreit. Atme vollständig aus – bis die Lungen leer sind. Beuge dich leicht nach vorne, Hände auf die Oberschenkel. Erschaffe ein falsches Einatmen: Ziehe den Bauch nach innen und oben, als würdest du einatmen – ohne Luft hereinzulassen. Halte 5–10 Sekunden, dann tief einatmen.',
+          },
+          {
+            title: 'Seitliche Brustkorbdehnung – Einseitig rechts',
+            duration: 60,
+            text: 'Stehe aufrecht. Hebe den rechten Arm über den Kopf, beuge dich kontrolliert nach links. Atme tief in die rechte Seite des Brustkorbs – spüre die Dehnung zwischen den Rippen. 5 tiefe Atemzüge halten.',
+          },
+          {
+            title: 'Seitliche Brustkorbdehnung – Einseitig links',
+            duration: 60,
+            text: 'Seitenwechsel: Linken Arm hoch, nach rechts beugen. Atme in die linke Seite des Brustkorbs. 5 tiefe Atemzüge halten.',
+          },
+          {
+            title: 'Vordere Brustkorbdehnung – Brustöffner',
+            duration: 90,
+            text: 'Stehe oder sitze aufrecht. Verschränke die Hände hinter dem Rücken. Drücke die Schultern nach hinten und unten, hebe den Brustkorb nach vorne und oben. Atme tief in die Brust ein. 5–8 tiefe Atemzüge.',
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Stufe 2 – Vertiefung',
+        duration: '10–12 Min',
+        description: 'Intensiviere die Dehnung mit Halten und aktiver Atemführung.',
+        color: 'blue',
+        steps: [
+          {
+            title: 'Uddiyana Bandha – Halten 15–20 Sek',
+            duration: 120,
+            text: 'Wie Stufe 1, aber halte den Bandha länger. Steigere schrittweise auf 15–20 Sekunden. 3 Runden mit voller Erholungsatmung dazwischen. Uddiyana massiert Zwerchfell und Bauchorgane.',
+          },
+          {
+            title: 'Seitliche Dehnung – Mit Ausatmungs-Sinken',
+            duration: 90,
+            text: 'Rechte Seite: Beim Ausatmen lass den gehobenen Arm aktiv tiefer sinken, verstärke die Seitwärtsbeugung. Die Dehnung intensiviert sich in der Ausatmung. 5 Atemzüge pro Seite.',
+          },
+          {
+            title: 'Seitliche Dehnung – Linke Seite',
+            duration: 90,
+            text: 'Seitenwechsel. Wieder beim Ausatmen aktiv tiefer sinken. 5 Atemzüge.',
+          },
+          {
+            title: 'Vordere Brustkorbdehnung – Mit Kopfneigung',
+            duration: 90,
+            text: 'Brustöffner + Kopf leicht nach hinten neigen, Kinn zur Decke. Vorderseite des Halses und Sternum öffnen sich. Atemzüge in den oberen Brustbereich lenken. 5 Atemzüge.',
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Stufe 3 – Fortgeschritten',
+        duration: '12–15 Min',
+        description: 'Freie Ausführung, beide Arme oben, Rückenatmung.',
+        color: 'purple',
+        steps: [
+          {
+            title: 'Uddiyana Bandha – Aufrecht stehend',
+            duration: 150,
+            text: 'Übung jetzt aufrecht ohne Abstützen ausführen. Arme locker an den Seiten. Erfordert mehr Körperkontrolle. 3–5 Runden à 10–15 Sekunden Halten mit voller Erholung dazwischen.',
+          },
+          {
+            title: 'Seitliche Dehnung – Beide Arme oben rechts',
+            duration: 90,
+            text: 'Falte die Hände über dem Kopf. Beuge dich nach rechts. Bewusstes Einatmen in die jeweilige Dehnung. 10 Wiederholungen mit vollem Atemzug pro Seite.',
+          },
+          {
+            title: 'Seitliche Dehnung – Beide Arme oben links',
+            duration: 90,
+            text: 'Wechsel: nach links beugen. 10 Wiederholungen mit vollem Atemzug.',
+          },
+          {
+            title: 'Hintere Brustkorbdehnung – Rundrücken',
+            duration: 120,
+            text: 'Setze dich, falte die Hände vor dem Bauch, runde den Rücken maximal. Kinn zur Brust. Atme jetzt in den Rücken – spüre, wie sich die hinteren Rippenbögen öffnen. 5–8 tiefe Atemzüge in den Rücken.',
+          },
+        ],
+      },
+    ],
     steps: [
       {
         title: 'Uddiyana Bandha – Stufe 1: Grundposition',
@@ -741,12 +852,13 @@ export const exercises = [
     shortDesc: 'Geführte Reise durch 4 Farbräume – mit einem geliebten Menschen verbinden',
     icon: '◌',
     hasTimer: false,
+    audioFile: '/audio/Farbraum%20Meditation.mp3',
     source: 'Tom Sietas – Deine Atmung ändert alles',
     intro: 'Die Farbraummeditation ist eine tiefe Visualisierungsübung aus dem DeepFlow-System. Du reist gemeinsam mit einem geliebten Menschen durch vier Farbräume, die jeweils eine innere Qualität verkörpern. Diese Meditation ist ideal mit einer eigenen Audiodatei als Begleitung.',
     steps: [
       {
-        title: 'Vorbereitung & Audiodatei',
-        text: 'Diese Meditation ist für die Begleitung durch eine Audiodatei konzipiert. Lade deine Audiodatei im Player unten hoch und starte sie, wenn du die Augen schließt. Ohne Audio: Lies jeden Schritt vor dem Schließen der Augen und verweile je 3–4 Minuten.',
+        title: 'Vorbereitung & Audio starten',
+        text: 'Diese Meditation ist für die Begleitung durch eine Audiodatei konzipiert. Starte den Audio-Player oben, bevor du die Augen schließt. Ohne Audio: Lies jeden Schritt vor dem Schließen der Augen und verweile je 3–4 Minuten.',
       },
       {
         title: 'Ankunft & Begleitung wählen',
@@ -770,7 +882,7 @@ export const exercises = [
       },
     ],
     tips: [
-      'Audiodatei im Player unten laden für die vollständige geführte Version',
+      'Starte den Audio-Player oben für die vollständige geführte Version',
       'Ideal am Abend oder nach intensivem Training',
       'Die Begleitperson kann auch eine verstorbene, imaginäre oder symbolische Figur sein',
       'Tagebuch danach: Was hast du in den Räumen erlebt?',
@@ -854,6 +966,165 @@ export const exercises = [
       'Nicht bei akuter emotionaler Flut – erst Emotionen beruhigen (Hand-auf-Herz), dann reflektieren',
       'Kombiniere mit dem Fokus Briefing am Morgen',
       'Je öfter geübt, desto schneller entsteht der Perspektivwechsel spontan im Alltag',
+    ],
+  },
+
+  {
+    id: 'happy-place-meditation',
+    name: 'Happy Place Meditation',
+    category: 'meditation',
+    duration: '~10 Minuten',
+    shortDesc: 'Geführte Meditation zu deinem inneren Rückzugsort',
+    icon: '✧',
+    hasTimer: false,
+    audioFile: '/audio/Happy%20Place%20Meditation.mp3',
+    source: 'DeepFlow – Geführte Audioübung',
+    intro: 'Die Happy Place Meditation führt dich zu deinem inneren sicheren Ort – einem persönlichen Rückzugsort, den du jederzeit aufsuchen kannst. Diese geführte Visualisierung stärkt das Gefühl von Sicherheit, Geborgenheit und innerer Ruhe.',
+    steps: [
+      {
+        title: 'Vorbereitung',
+        text: 'Lege oder setze dich bequem hin. Starte den Audio-Player oben und schließe die Augen. Lass die Stimme dich durch die Meditation führen.',
+      },
+      {
+        title: 'Ankommen & Atmen',
+        text: 'Atme einige Male tief ein und aus. Mit jedem Ausatmen lässt du Anspannung los. Dein Körper wird schwerer und ruhiger.',
+      },
+      {
+        title: 'Deinen inneren Ort entdecken',
+        text: 'Lass ein Bild entstehen – einen Ort, an dem du dich vollkommen sicher und wohl fühlst. Das kann ein echter Ort aus deiner Vergangenheit sein oder ein vollständig imaginärer Raum.',
+      },
+      {
+        title: 'Mit allen Sinnen ankommen',
+        text: 'Erkunde deinen Ort mit allen Sinnen: Was siehst, hörst, riechst und spürst du dort? Lass die Details lebendig werden.',
+      },
+      {
+        title: 'Verankern',
+        text: 'Spüre das Gefühl von Sicherheit und Ruhe in deinem Körper. Verankere es – dieser Ort ist immer für dich da.',
+      },
+      {
+        title: 'Rückkehr',
+        text: 'Atme tief ein. Bewege langsam Finger und Zehen. Öffne die Augen. Trage das Gefühl mit in deinen Tag.',
+      },
+    ],
+    tips: [
+      'Nutze denselben inneren Ort jedes Mal – er wird mit der Zeit stärker',
+      'Ideal bei Stress, Angst oder vor dem Einschlafen',
+      'Du kannst auch ohne Audio üben, wenn der Ort einmal klar visualisiert ist',
+    ],
+  },
+
+  {
+    id: 'nsdr',
+    name: 'NSDR – Non Sleep Deep Rest',
+    category: 'einschlafen',
+    duration: '10 Minuten',
+    shortDesc: 'Non-Sleep Deep Rest – tiefe Erholung ohne Schlaf, ideal nach dem Mittagessen oder bei Erschöpfung',
+    icon: '◑',
+    hasTimer: false,
+    audioFile: '/audio/10%20min%20NSDR.mp3',
+    source: 'DeepFlow – Geführte Audioübung',
+    intro: 'Non-Sleep Deep Rest (NSDR) versetzt Gehirn und Körper in einen tiefen Erholungszustand – ähnlich wie Schlaf, aber im Wachbewusstsein. Studien zeigen, dass 10–20 Minuten NSDR Dopamin im Striatum wiederherstellen und Lernleistung steigern können.',
+    steps: [
+      {
+        title: 'Vorbereitung',
+        text: 'Lege dich flach auf den Rücken – auf ein Sofa, eine Matte oder dein Bett. Starte den Audio-Player oben und schließe die Augen.',
+      },
+      {
+        title: 'Absicht setzen',
+        text: 'Sage dir innerlich: "Ich werde wach und entspannt bleiben." NSDR ist kein Schlaf – das Ziel ist bewusste Tiefenentspannung.',
+      },
+      {
+        title: 'Körper loslassen',
+        text: 'Lass die Muskeln nacheinander los. Kein aktives Tun – nur Wahrnehmen und Loslassen. Die geführte Stimme begleitet dich durch den Prozess.',
+      },
+      {
+        title: 'Gehirn in den Ruhezustand bringen',
+        text: 'Mit verlangsamter Atmung und Körperfokus gleitet das Gehirn in Alpha- und Theta-Wellen. Gedanken kommen und gehen – du bleibst Beobachter.',
+      },
+      {
+        title: 'Rückkehr',
+        text: 'Am Ende der Aufnahme: Strecke dich, atme tief durch und öffne die Augen. Du wirst klarer und erholter sein als zuvor.',
+      },
+    ],
+    tips: [
+      'Ideal nach dem Mittagessen oder bei Energiedips am Nachmittag',
+      'Nicht im Bett liegen, wenn du nicht schlafen willst – Stuhl oder Matte bevorzugen',
+      'Regelmäßige Nutzung verbessert Schlafqualität und kognitive Leistung',
+      'Entwickelt von Neurowissenschaftler Andrew Huberman (Stanford)',
+    ],
+  },
+
+  {
+    id: 'morning-breathwork',
+    name: 'Morning Breathwork',
+    category: 'energie',
+    duration: '15 Minuten',
+    shortDesc: 'Geführtes Atemtraining für einen energievollen Start in den Tag',
+    icon: '▲',
+    hasTimer: false,
+    audioFile: '/audio/15%20Min%20Morning%20Breathwork.mp3',
+    source: 'DeepFlow – Geführte Audioübung',
+    intro: 'Dieses 15-minütige Morgen-Breathwork aktiviert Körper und Geist für den Tag. Die Kombination aus Aktivierungsatmung und anschließender Stabilisierung sorgt für anhaltende Energie und mentale Klarheit – ohne Kaffee.',
+    steps: [
+      {
+        title: 'Vorbereitung',
+        text: 'Setze oder lege dich bequem hin. Starte den Audio-Player oben. Trinke vorher ein Glas Wasser.',
+      },
+      {
+        title: 'Aufwärmphase',
+        text: 'Die Aufnahme beginnt mit sanfter Mobilisierung der Atemmuskulatur. Folge dem geführten Rhythmus – Bauch- und Brustatmung werden aktiviert.',
+      },
+      {
+        title: 'Aktivierungsphase',
+        text: 'Intensivere Atemtechniken wecken das Nervensystem. Du wirst Kribbeln, Wärme oder erhöhte Wachheit spüren – das ist gewollt.',
+      },
+      {
+        title: 'Stabilisierung',
+        text: 'Die Abschlussphase bringt das aktivierte System in Balance. Kohärenzatmung oder Dreiecksatmung verankern die Energie ohne Überaktivierung.',
+      },
+      {
+        title: 'Integration',
+        text: 'Bleibe nach Ende der Aufnahme 1–2 Minuten still. Spüre den Unterschied zu deinem Ausgangszustand. Dann in den Tag starten.',
+      },
+    ],
+    tips: [
+      'Nüchtern oder mind. 1 Stunde nach dem Frühstück',
+      'Bei Schwindel: Tempo verlangsamen oder Pause einlegen',
+      'Ideal als Teil einer Morgenroutine vor dem ersten Bildschirm',
+      'Kombinierbar mit dem Fokus Briefing danach',
+    ],
+  },
+
+  {
+    id: '7min-breathwork-energie',
+    name: '7 Min Breathwork für Energie',
+    category: 'energie',
+    duration: '7 Minuten',
+    shortDesc: 'Kurzes intensives Atemtraining für sofortige Energie',
+    icon: '◆',
+    hasTimer: false,
+    audioFile: '/audio/7%20Minute%20Breathwork%20For%20Energy.mp3',
+    source: 'DeepFlow – Geführte Audioübung',
+    intro: 'Schnelles, intensives Atemtraining für sofortige Energie. Ideal wenn du schnell in einen aktivierten Zustand kommen musst – vor dem Sport, bei Erschöpfung oder als Mittagspause. 7 Minuten, maximaler Effekt.',
+    steps: [
+      {
+        title: 'Vorbereitung',
+        text: 'Sitz aufrecht oder stehe. Starte den Audio-Player oben. Diese Übung ist intensiver – folge deinem eigenen Tempo.',
+      },
+      {
+        title: 'Aktivierungsphase',
+        text: 'Kraftvolle, rhythmische Atemzüge wecken Körper und Geist in kurzer Zeit. Die geführte Stimme gibt das Tempo vor.',
+      },
+      {
+        title: 'Abschluss',
+        text: 'Kurze Stabilisierung am Ende. Atme tief durch und spüre die sofortige Wirkung – Klarheit, Energie, Präsenz.',
+      },
+    ],
+    tips: [
+      'Nicht direkt nach dem Essen',
+      'Bei Schwindel sofort langsamer atmen oder aufhören',
+      'Ideal als Pre-Workout oder bei 15-Uhr-Erschöpfung',
+      'Kürzere Alternative zum 15 Min Morning Breathwork',
     ],
   },
 

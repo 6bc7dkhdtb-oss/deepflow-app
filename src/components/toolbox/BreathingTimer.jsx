@@ -7,6 +7,7 @@ const PHASE_COLORS = {
   out:   { ring: '#6366f1', glow: 'rgba(99,102,241,0.3)',   label: 'text-indigo-300' },
   hold:  { ring: '#06b6d4', glow: 'rgba(6,182,212,0.3)',    label: 'text-cyan-300' },
   pause: { ring: '#8b5cf6', glow: 'rgba(139,92,246,0.3)',   label: 'text-purple-300' },
+  extra: { ring: '#22d3ee', glow: 'rgba(34,211,238,0.4)',   label: 'text-cyan-200' },
 }
 
 function secsToDisplay(s) {
@@ -135,9 +136,11 @@ export default function BreathingTimer({ pattern, onClose }) {
   const circumference = 2 * Math.PI * radius
   const strokeDash = circumference * (1 - progress)
 
-  const isExpanding = currentPhase.type === 'in'
+  const isExpanding = currentPhase.type === 'in' || currentPhase.type === 'extra'
   const isHolding   = currentPhase.type === 'hold' || currentPhase.type === 'pause'
-  const scale = isExpanding
+  const scale = currentPhase.type === 'extra'
+    ? 1 + 0.05 * progress
+    : isExpanding
     ? 0.75 + 0.25 * progress
     : isHolding
     ? currentPhase.type === 'hold' ? 1 : 0.75
