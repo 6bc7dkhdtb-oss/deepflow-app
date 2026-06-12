@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { formatTime } from '../../data/trainingPlan'
 
 const SESSION_TYPES = [
+  { id: 'GRUND', label: 'Grundlagen',         sub: 'Atemanhalten',        color: 'blue'   },
   { id: 'CO2',   label: 'CO₂-Tabelle',       sub: 'Toleranz-Training',  color: 'blue'   },
   { id: 'O2',    label: 'O₂-Tabelle',         sub: 'Kapazitäts-Training', color: 'teal'   },
   { id: 'MUSKEL',label: 'Atemmuskeltraining', sub: 'Kraftblock',          color: 'purple' },
@@ -22,7 +23,7 @@ export default function AddSession({ onSave, onCancel, suggestedType }) {
   const [showRounds, setShowRounds] = useState(false)
   const [roundInput, setRoundInput] = useState({ min: '', sec: '' })
 
-  const isApnoe = type === 'CO2' || type === 'O2'
+  const isApnoe = type === 'GRUND' || type === 'CO2' || type === 'O2'
   const maxHoldSeconds = (parseInt(minutes) || 0) * 60 + (parseInt(seconds) || 0)
   const canSave = isApnoe ? maxHoldSeconds >= 10 : true
 
@@ -61,7 +62,7 @@ export default function AddSession({ onSave, onCancel, suggestedType }) {
         {/* Type selector */}
         <div>
           <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Art der Session</p>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             {SESSION_TYPES.map(t => {
               const styles = TYPE_STYLES[t.color]
               return (

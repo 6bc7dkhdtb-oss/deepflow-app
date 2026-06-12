@@ -1,81 +1,52 @@
 import { useState } from 'react'
-import { formatTime, getTodayIndex, TRAINING_OPTIONS } from '../../data/trainingPlan'
+import { getTodayIndex, TRAINING_OPTIONS } from '../../data/trainingPlan'
+import { getTraining } from '../../data/trainingModules'
 
 const STEP_COLORS = {
-  indigo: { bg: 'bg-indigo-500/15', border: 'border-indigo-500/30', text: 'text-indigo-300', dot: 'bg-indigo-400', badge: 'bg-indigo-500/20 text-indigo-300' },
-  cyan:   { bg: 'bg-cyan-500/15',   border: 'border-cyan-500/30',   text: 'text-cyan-300',   dot: 'bg-cyan-400',   badge: 'bg-cyan-500/20 text-cyan-300'   },
-  purple: { bg: 'bg-purple-500/15', border: 'border-purple-500/30', text: 'text-purple-300', dot: 'bg-purple-400', badge: 'bg-purple-500/20 text-purple-300' },
-  blue:   { bg: 'bg-blue-500/15',   border: 'border-blue-500/30',   text: 'text-blue-300',   dot: 'bg-blue-400',   badge: 'bg-blue-500/20 text-blue-300'   },
-  teal:   { bg: 'bg-teal-500/15',   border: 'border-teal-500/30',   text: 'text-teal-300',   dot: 'bg-teal-400',   badge: 'bg-teal-500/20 text-teal-300'   },
+  indigo: { dot: 'bg-indigo-400' },
+  cyan:   { dot: 'bg-cyan-400' },
+  purple: { dot: 'bg-purple-400' },
+  blue:   { dot: 'bg-blue-400' },
+  teal:   { dot: 'bg-teal-400' },
 }
 
-function TableRows({ table }) {
+function TrainingDetail({ training, onStart }) {
+  if (!training) return null
+  const dot = STEP_COLORS[training.color]?.dot || 'bg-slate-400'
   return (
-    <div className="mt-2 rounded-lg overflow-hidden border border-slate-700/40">
-      {table.rounds.map((round, i) => (
-        <div key={i} className={`flex items-center gap-3 px-3 py-2 ${i < table.rounds.length - 1 ? 'border-b border-slate-700/30' : ''}`}>
-          <span className="w-5 h-5 rounded-full bg-slate-700/70 flex items-center justify-center text-xs text-slate-400 flex-shrink-0">
-            {round.round}
-          </span>
-          <div className="flex-1 flex items-center gap-3 text-xs">
-            <span className="text-white font-semibold tabular-nums">{formatTime(round.hold)}</span>
-            <span className="text-slate-600">halten</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3 h-3 text-slate-600">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-            <span className="text-slate-400 tabular-nums">{formatTime(round.rest)}</span>
-            <span className="text-slate-600">Pause</span>
-          </div>
+    <div className="space-y-2.5">
+      <div className="space-y-1.5">
+        <div className="flex items-center gap-2.5">
+          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-indigo-400" />
+          <p className="text-xs text-slate-300">Aufwärmen · Zwerchfellatmung</p>
         </div>
-      ))}
-    </div>
-  )
-}
-
-function SessionStep({ step, index, isLast }) {
-  const [tableOpen, setTableOpen] = useState(false)
-  const c = STEP_COLORS[step.color] || STEP_COLORS.blue
-
-  return (
-    <div className="flex gap-3">
-      <div className="flex flex-col items-center flex-shrink-0">
-        <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${c.bg} ${c.text} border ${c.border}`}>
-          {index + 1}
+        <div className="flex items-center gap-2.5">
+          <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-cyan-400" />
+          <p className="text-xs text-slate-300">Aufwärmen · Brustkorbdehnung <span className="text-slate-500">(Stufe wählbar)</span></p>
         </div>
-        {!isLast && <div className="w-px flex-1 mt-1.5 mb-0.5 bg-slate-700/50" />}
+        <div className="flex items-center gap-2.5">
+          <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dot}`} />
+          <p className="text-xs text-slate-200 font-medium">{training.name}</p>
+        </div>
       </div>
 
-      <div className={`flex-1 min-w-0 pb-${isLast ? '0' : '3'}`}>
-        <div className={`rounded-xl border ${c.border} ${c.bg} p-3`}>
-          <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
-              <p className={`text-sm font-semibold ${c.text}`}>{step.name}</p>
-              <p className="text-xs text-slate-400 mt-0.5 leading-snug">{step.description}</p>
-            </div>
-            <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-              <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${c.badge}`}>
-                {step.duration}
-              </span>
-              <span className="text-xs text-slate-500">{step.role}</span>
-            </div>
-          </div>
-
-          {step.table && (
-            <button
-              onClick={() => setTableOpen(o => !o)}
-              className="mt-2.5 flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                className={`w-3.5 h-3.5 transition-transform ${tableOpen ? 'rotate-180' : ''}`}>
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-              {tableOpen ? 'Tabelle ausblenden' : `${step.table.rounds.length} Runden anzeigen`}
-            </button>
-          )}
-          {step.table && tableOpen && <TableRows table={step.table} />}
+      {training.levels && (
+        <div className="flex flex-wrap gap-1.5 pl-4">
+          {training.levels.map(l => (
+            <span key={l.id} className="text-[10px] bg-slate-700/50 border border-slate-600/30 px-2 py-0.5 rounded-full text-slate-400">
+              {l.name.replace(/ – .*/, '')}
+            </span>
+          ))}
         </div>
-        {!isLast && <div className="h-1.5" />}
-      </div>
+      )}
+
+      <button
+        onClick={() => onStart?.(training.id)}
+        className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors flex items-center justify-center gap-2"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+        Training starten
+      </button>
     </div>
   )
 }
@@ -116,10 +87,11 @@ function SwapPicker({ currentType, onPick, onClose }) {
   )
 }
 
-function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
+function DayCard({ dayEntry, isToday, defaultOpen, onSwap, onStart }) {
   const [open, setOpen] = useState(defaultOpen)
   const [showSwap, setShowSwap] = useState(false)
-  const { session, label, dayName, type, isOverride } = dayEntry
+  const { label, dayName, type, isOverride, trainingId } = dayEntry
+  const training = trainingId ? getTraining(trainingId) : null
 
   if (dayEntry.isRest) {
     return (
@@ -141,17 +113,13 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
           + Training für diesen Tag hinzufügen
         </button>
         {showSwap && (
-          <SwapPicker
-            currentType={type}
-            onPick={onSwap}
-            onClose={() => setShowSwap(false)}
-          />
+          <SwapPicker currentType={type} onPick={onSwap} onClose={() => setShowSwap(false)} />
         )}
       </div>
     )
   }
 
-  if (dayEntry.isFlex && !session) {
+  if (dayEntry.isFlex) {
     return (
       <div className={`rounded-xl border ${isToday ? 'border-blue-600/50' : 'border-slate-700/30 bg-slate-800/20'} px-4 py-3 space-y-2`}>
         <div className="flex items-center gap-3">
@@ -160,7 +128,7 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
           </div>
           <div className="flex-1">
             <p className="text-sm text-slate-300 font-medium">Flex-Tag</p>
-            <p className="text-xs text-slate-500">{dayName} · freie Wahl</p>
+            <p className="text-xs text-slate-500">{dayName} · freie Wahl (Toolbox)</p>
           </div>
           {isToday && <span className="text-xs bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full">Heute</span>}
         </div>
@@ -178,12 +146,12 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
   }
 
   const typeColors = {
-    CO2:   { header: 'bg-blue-600',   dot: 'bg-blue-400',   label: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
-    O2:    { header: 'bg-teal-600',   dot: 'bg-teal-400',   label: 'bg-teal-500/20 text-teal-300 border-teal-500/30' },
-    MUSKEL:{ header: 'bg-purple-700', dot: 'bg-purple-400', label: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
-    FLEX:  { header: 'bg-slate-600',  dot: 'bg-slate-400',  label: 'bg-slate-600/30 text-slate-300 border-slate-500/30' },
+    GRUND: { header: 'bg-blue-600',   },
+    CO2:   { header: 'bg-blue-600',   },
+    O2:    { header: 'bg-teal-600',   },
+    MUSKEL:{ header: 'bg-purple-700', },
   }
-  const tc = typeColors[type] || typeColors.CO2
+  const tc = typeColors[type] || typeColors.GRUND
 
   const borderClass = isToday
     ? 'border-blue-600/50'
@@ -202,7 +170,7 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
         </div>
         <div className="flex-1 text-left min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <p className="text-sm font-semibold text-white">{session.label}</p>
+            <p className="text-sm font-semibold text-white">{training?.name || type}</p>
             {isToday && (
               <span className="text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30 px-1.5 py-0.5 rounded-full">Heute</span>
             )}
@@ -210,7 +178,7 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
               <span className="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded-full">Geändert</span>
             )}
           </div>
-          <p className="text-xs text-slate-500 mt-0.5">{dayName} · {session.totalDuration}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{dayName} · {training?.durationLabel || ''}</p>
         </div>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
           className={`w-4 h-4 text-slate-500 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}>
@@ -220,14 +188,7 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
 
       {open && (
         <div className="px-4 pb-4 border-t border-slate-700/30 pt-3 space-y-3">
-          {session.steps.map((step, i) => (
-            <SessionStep
-              key={step.id}
-              step={step}
-              index={i}
-              isLast={i === session.steps.length - 1}
-            />
-          ))}
+          <TrainingDetail training={training} onStart={onStart} />
           <button
             onClick={() => setShowSwap(s => !s)}
             className="w-full text-xs text-slate-500 hover:text-slate-300 transition-colors py-2 border border-dashed border-slate-700/50 rounded-lg hover:border-slate-600"
@@ -235,11 +196,7 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
             {showSwap ? 'Auswahl abbrechen' : 'Anderes Training für diesen Tag'}
           </button>
           {showSwap && (
-            <SwapPicker
-              currentType={type}
-              onPick={onSwap}
-              onClose={() => setShowSwap(false)}
-            />
+            <SwapPicker currentType={type} onPick={onSwap} onClose={() => setShowSwap(false)} />
           )}
         </div>
       )}
@@ -247,7 +204,7 @@ function DayCard({ dayEntry, isToday, defaultOpen, onSwap }) {
   )
 }
 
-export default function WeeklyPlan({ weekPlan, onSwap }) {
+export default function WeeklyPlan({ weekPlan, onSwap, onStart }) {
   const todayIdx = getTodayIndex()
 
   return (
@@ -256,9 +213,9 @@ export default function WeeklyPlan({ weekPlan, onSwap }) {
         {[
           { color: 'indigo', label: 'Zwerchfell' },
           { color: 'cyan',   label: 'Brustkorbdehnung' },
-          { color: 'purple', label: 'Atemmuskel' },
-          { color: 'blue',   label: 'CO₂' },
+          { color: 'blue',   label: 'Grundlagen / CO₂' },
           { color: 'teal',   label: 'O₂' },
+          { color: 'purple', label: 'Atemmuskel' },
         ].map(item => (
           <span key={item.label} className="flex items-center gap-1.5 text-xs text-slate-500">
             <span className={`w-2 h-2 rounded-full ${STEP_COLORS[item.color].dot}`} />
@@ -274,6 +231,7 @@ export default function WeeklyPlan({ weekPlan, onSwap }) {
           isToday={day.dayIndex === todayIdx}
           defaultOpen={day.dayIndex === todayIdx}
           onSwap={(newType) => onSwap?.(day.dayIndex, newType)}
+          onStart={onStart}
         />
       ))}
     </div>

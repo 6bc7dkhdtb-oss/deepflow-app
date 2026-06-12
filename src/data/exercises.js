@@ -1,28 +1,75 @@
 export const CATEGORIES = [
-  { id: 'alle', label: 'Alle' },
-  { id: 'fokus', label: 'Fokus & Klarheit' },
-  { id: 'entspannung', label: 'Entspannung & Stress' },
-  { id: 'einschlafen', label: 'Einschlafen' },
-  { id: 'energie', label: 'Energie & Aktivierung' },
-  { id: 'meditation', label: 'Meditation' },
-  { id: 'apnoe', label: 'Apnoe-Vorbereitung' },
+  { id: 'atemtechnik', label: 'Atemtechnik', icon: '🫁', desc: 'Geführte Atemmuster für Fokus, Ruhe & Energie' },
+  { id: 'meditation', label: 'Meditation & Breathwork', icon: '◈', desc: 'Geführte Meditationen & Audio-Breathwork' },
+  { id: 'mental', label: 'Mentaltechnik', icon: '✦', desc: 'Schnelle mentale Werkzeuge für den Moment' },
 ]
 
 export const CATEGORY_COLORS = {
-  fokus: { bg: 'bg-blue-500/20', text: 'text-blue-300', border: 'border-blue-500/30', dot: 'bg-blue-400' },
-  entspannung: { bg: 'bg-teal-500/20', text: 'text-teal-300', border: 'border-teal-500/30', dot: 'bg-teal-400' },
-  einschlafen: { bg: 'bg-purple-500/20', text: 'text-purple-300', border: 'border-purple-500/30', dot: 'bg-purple-400' },
-  energie: { bg: 'bg-orange-500/20', text: 'text-orange-300', border: 'border-orange-500/30', dot: 'bg-orange-400' },
+  atemtechnik: { bg: 'bg-blue-500/20', text: 'text-blue-300', border: 'border-blue-500/30', dot: 'bg-blue-400' },
   meditation: { bg: 'bg-indigo-500/20', text: 'text-indigo-300', border: 'border-indigo-500/30', dot: 'bg-indigo-400' },
-  apnoe: { bg: 'bg-cyan-500/20', text: 'text-cyan-300', border: 'border-cyan-500/30', dot: 'bg-cyan-400' },
+  mental: { bg: 'bg-teal-500/20', text: 'text-teal-300', border: 'border-teal-500/30', dot: 'bg-teal-400' },
 }
 
 // timerPattern phases: type = 'in' | 'out' | 'hold' | 'pause'
 export const exercises = [
+  // ─── ATEMTECHNIK ────────────────────────────────────────────────────────────
+  {
+    id: 'boxatmung',
+    name: 'Boxatmung',
+    category: 'atemtechnik',
+    duration: '6–10 Runden (ca. 4 Min)',
+    shortDesc: 'Fokus & Kontrolle – vier gleiche Phasen à 4 Sek für mentale Klarheit',
+    icon: '□',
+    hasTimer: true,
+    source: 'Tom Sietas – Deine Atmung ändert alles',
+    intro: 'Die Boxatmung (Navy SEAL Technik) besteht aus vier gleichen Phasen à 4 Sekunden. Sie reguliert das Nervensystem, schärft den Fokus und wird von Einsatzkräften zur Stressregulation eingesetzt.',
+    timerPattern: {
+      defaultDuration: 240,
+      phases: [
+        { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Tief durch die Nase einatmen' },
+        { name: 'Halten', type: 'hold', duration: 4, color: 'cyan', instruction: 'Atem oben halten – entspannt' },
+        { name: 'Ausatmen', type: 'out', duration: 4, color: 'indigo', instruction: 'Kontrolliert durch den Mund ausatmen' },
+        { name: 'Pause', type: 'pause', duration: 4, color: 'purple', instruction: 'Lungen leer – ruhig halten' },
+      ],
+    },
+    steps: [
+      {
+        title: 'Aufrechte Haltung',
+        text: 'Sitz aufrecht, Schultern zurück. Aktive aber entspannte Körperhaltung. Augen können offen oder geschlossen sein.',
+      },
+      {
+        title: 'Phase 1: Einatmen – 4 Sek',
+        text: 'Langsam und gleichmäßig durch die Nase einatmen. Zähle innerlich bis 4. Bauch und Brust füllen sich.',
+      },
+      {
+        title: 'Phase 2: Halten – 4 Sek',
+        text: 'Atem oben halten bei gefüllten Lungen. Keine Anspannung – entspannt halten. Zähle bis 4.',
+      },
+      {
+        title: 'Phase 3: Ausatmen – 4 Sek',
+        text: 'Durch leicht geöffnete Lippen oder die Nase kontrolliert ausatmen. Gleichmäßiger, ruhiger Fluss.',
+      },
+      {
+        title: 'Phase 4: Pause – 4 Sek',
+        text: 'Lungen leer halten. Entspannt und ruhig. Keine Anspannung. Warte dann auf die nächste Einatmung.',
+      },
+      {
+        title: '6–10 Runden',
+        text: 'Wiederhole das Muster 6–10 Mal. Mit wachsender Übung kannst du auf 6 Sekunden pro Phase steigern.',
+      },
+    ],
+    tips: [
+      'Wird von Navy SEALs und Spezialeinheiten zur Stressregulation genutzt',
+      'Auch als "taktische Atmung" bekannt',
+      'Ideal vor Präsentationen, Prüfungen oder Hochdrucksituationen',
+      'Steigere die Phasen schrittweise von 4 auf 6 Sekunden',
+    ],
+  },
+
   {
     id: 'zyklische-vollatmung',
     name: 'Zyklische Vollatmung',
-    category: 'energie',
+    category: 'atemtechnik',
     duration: '4–5 Minuten',
     shortDesc: 'Aktivierend – Energie & mentale Schärfe durch vollständige Atemzyklen',
     icon: '⚡',
@@ -74,7 +121,7 @@ export const exercises = [
   {
     id: 'dreiecksatmung',
     name: 'Dreiecksatmung',
-    category: 'entspannung',
+    category: 'atemtechnik',
     duration: '3–5 Minuten',
     shortDesc: 'Beruhigend – Aktiviert den Vagusnerv durch verlängerte Pause nach dem Ausatmen',
     icon: '△',
@@ -121,7 +168,7 @@ export const exercises = [
   {
     id: 'kohaerenzatmung',
     name: 'Kohärenzatmung',
-    category: 'entspannung',
+    category: 'atemtechnik',
     duration: '5 Minuten',
     shortDesc: 'Synchronisiert Herz und Gehirn – maximale Herzratenvariabilität bei 5–6 Atemzügen/Min',
     icon: '♡',
@@ -166,106 +213,54 @@ export const exercises = [
   },
 
   {
-    id: 'boxatmung',
-    name: 'Boxatmung',
-    category: 'fokus',
-    duration: '6–10 Runden (ca. 4 Min)',
-    shortDesc: 'Fokus & Kontrolle – vier gleiche Phasen à 4 Sek für mentale Klarheit',
-    icon: '□',
+    id: '4-7-8-atmung',
+    name: '4-7-8 Einschlafen',
+    category: 'atemtechnik',
+    duration: '4–8 Runden',
+    shortDesc: 'Natürliches Beruhigungsmittel – verlangsamt Herzrate und schaltet Geist ab',
+    icon: '◐',
     hasTimer: true,
     source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Die Boxatmung (Navy SEAL Technik) besteht aus vier gleichen Phasen à 4 Sekunden. Sie reguliert das Nervensystem, schärft den Fokus und wird von Einsatzkräften zur Stressregulation eingesetzt.',
+    intro: 'Die 4-7-8 Atmung (nach Dr. Andrew Weil) ist eine der wirksamsten Techniken zum Einschlafen. Die lange Ausatmung und das ausgedehnte Halten beruhigen das Nervensystem in Minuten.',
     timerPattern: {
       defaultDuration: 240,
       phases: [
-        { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Tief durch die Nase einatmen' },
-        { name: 'Halten', type: 'hold', duration: 4, color: 'cyan', instruction: 'Atem oben halten – entspannt' },
-        { name: 'Ausatmen', type: 'out', duration: 4, color: 'indigo', instruction: 'Kontrolliert durch den Mund ausatmen' },
-        { name: 'Pause', type: 'pause', duration: 4, color: 'purple', instruction: 'Lungen leer – ruhig halten' },
+        { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Ruhig durch die Nase' },
+        { name: 'Halten', type: 'hold', duration: 7, color: 'indigo', instruction: 'Atem oben sanft halten' },
+        { name: 'Ausatmen', type: 'out', duration: 8, color: 'purple', instruction: 'Vollständig durch den Mund ausatmen' },
       ],
     },
     steps: [
       {
-        title: 'Aufrechte Haltung',
-        text: 'Sitz aufrecht, Schultern zurück. Aktive aber entspannte Körperhaltung. Augen können offen oder geschlossen sein.',
+        title: 'Im Bett liegen',
+        text: 'Leg dich auf den Rücken. Zunge hinter den oberen Schneidezähnen am Gaumen. Augen schließen. 1–2 normale Atemzüge.',
       },
       {
-        title: 'Phase 1: Einatmen – 4 Sek',
-        text: 'Langsam und gleichmäßig durch die Nase einatmen. Zähle innerlich bis 4. Bauch und Brust füllen sich.',
+        title: '4 Sek einatmen',
+        text: 'Ruhig durch die Nase einatmen. 4 Sekunden. Keine Eile – gleichmäßig und tief.',
       },
       {
-        title: 'Phase 2: Halten – 4 Sek',
-        text: 'Atem oben halten bei gefüllten Lungen. Keine Anspannung – entspannt halten. Zähle bis 4.',
+        title: '7 Sek halten',
+        text: 'Atem oben halten. 7 Sekunden. Entspannt – keine Anspannung. Die Zunge bleibt am Gaumen.',
       },
       {
-        title: 'Phase 3: Ausatmen – 4 Sek',
-        text: 'Durch leicht geöffnete Lippen oder die Nase kontrolliert ausatmen. Gleichmäßiger, ruhiger Fluss.',
+        title: '8 Sek ausatmen',
+        text: 'Durch leicht geöffnete Lippen ausatmen. 8 Sekunden. Zischen oder sanftes "Ffff". Lunge vollständig leeren.',
       },
       {
-        title: 'Phase 4: Pause – 4 Sek',
-        text: 'Lungen leer halten. Entspannt und ruhig. Keine Anspannung. Warte dann auf die nächste Einatmung.',
-      },
-      {
-        title: '6–10 Runden',
-        text: 'Wiederhole das Muster 6–10 Mal. Mit wachsender Übung kannst du auf 6 Sekunden pro Phase steigern.',
+        title: '4–8 Runden',
+        text: 'Wiederhole 4–8 Mal. Viele Menschen schlafen bereits nach 4 Runden ein. Wenn nicht: weitermachen oder zum Bodyscan wechseln.',
       },
     ],
     tips: [
-      'Wird von Navy SEALs und Spezialeinheiten zur Stressregulation genutzt',
-      'Auch als "taktische Atmung" bekannt',
-      'Ideal vor Präsentationen, Prüfungen oder Hochdrucksituationen',
-      'Steigere die Phasen schrittweise von 4 auf 6 Sekunden',
+      'Die Ratio 4:7:8 ist entscheidend – nicht die absoluten Zeiten',
+      'Auch mit doppelten Zeiten (8:14:16) möglich',
+      'Falls Schwindel: Tempo reduzieren, kleiner atmen',
+      'Täglich einsetzen – Wirkung verstärkt sich mit Übung',
     ],
   },
 
-  {
-    id: 'buteyko',
-    name: 'Buteyko-Atmung',
-    category: 'entspannung',
-    duration: '10–15 Minuten',
-    shortDesc: 'Sanfte Reduktion der Atemtiefe – reguliert CO₂ und aktiviert Parasympathikus',
-    icon: '~',
-    hasTimer: true,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Die Buteyko-Methode trainiert das Atmen durch die Nase und reduziert das Atemvolumen. Die verlängerte Ausatmung und Pause senkt die Atemfrequenz, erhöht die CO₂-Toleranz und aktiviert tiefe Entspannung.',
-    timerPattern: {
-      defaultDuration: 600,
-      phases: [
-        { name: 'Einatmen', type: 'in', duration: 3.5, color: 'teal', instruction: 'Ruhig und leise durch die Nase' },
-        { name: 'Ausatmen', type: 'out', duration: 6, color: 'indigo', instruction: 'Sanft und vollständig ausatmen' },
-        { name: 'Pause', type: 'pause', duration: 7, color: 'purple', instruction: 'Entspannte Atempause halten' },
-      ],
-    },
-    steps: [
-      {
-        title: 'Nur durch die Nase',
-        text: 'Mund schließen. Ausschließlich durch die Nase atmen – ein- und ausatmen. Wenn die Nase verstopft ist, erst einen Buteyko-Nasen-Öffnungsatemzug machen.',
-      },
-      {
-        title: 'Einatmen reduzieren (3–4 Sek)',
-        text: 'Atme weniger als du "willst". Die Einatmung soll kleiner und leiser werden. Du solltest nach 2–3 Min leichten Hunger nach Luft spüren – das ist gewollt.',
-      },
-      {
-        title: 'Ausatmen verlängern (6 Sek)',
-        text: 'Die Ausatmung ist länger als die Einatmung. Lass alle Luft raus – ohne Pressen, einfach fließen lassen.',
-      },
-      {
-        title: 'Kontrollierte Pause (5–10 Sek)',
-        text: 'Nach dem Ausatmen: Nase zuhalten (oder offen lassen) und entspannt warten. Nicht bis zur Grenze – nur angenehme Pause. Dies ist die "kontrollierte Pause" nach Buteyko.',
-      },
-      {
-        title: '10–15 Minuten wiederholen',
-        text: 'Halte das Muster konstant. Du wirst nach 5–7 Minuten eine zunehmende Entspannung und Wärme im Körper spüren.',
-      },
-    ],
-    tips: [
-      'Die Methode wurde von Dr. Konstantin Buteyko in den 1950ern entwickelt',
-      'Besonders effektiv bei Asthma, Angstzuständen und Schlafproblemen',
-      'Der Lufthunger ist das Zeichen, dass es wirkt – aber niemals bis zur Atemnot',
-      'Täglich 2× 15 Minuten für optimale Wirkung',
-    ],
-  },
-
+  // ─── MEDITATION & BREATHWORK ─────────────────────────────────────────────────
   {
     id: 'deepflow-methode',
     name: 'DeepFlow Methode',
@@ -371,54 +366,6 @@ export const exercises = [
   },
 
   {
-    id: 'atemanhalten-grundlagen',
-    name: 'Atemanhalten Grundlagen',
-    category: 'apnoe',
-    duration: '15–20 Minuten',
-    shortDesc: 'Atemreiz kennenlernen – erste Schritte zur kontrollierten Apnoe-Fähigkeit',
-    icon: '◎',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Der erste und wichtigste Schritt im Apnoe-Training ist das Kennenlernen des Atemreizes. Du lernst, den Reiz zu erkennen, zu akzeptieren und kontrolliert darüber hinauszugehen – ohne Panik, mit Bewusstsein.',
-    steps: [
-      {
-        title: 'Sicherheitsregel',
-        text: 'WICHTIG: Diese Übung immer nur an Land oder sitzend/liegend auf dem Boden. Niemals im Wasser alleine. Niemals im Wasser ohne Aufsicht. Atemanhalten im Wasser erfordert einen ausgebildeten Buddy.',
-      },
-      {
-        title: 'Entspannungsatmung (3 Min)',
-        text: 'Beginne mit 3 Minuten ruhiger Atmung. Kohärenz-Rhythmus (5,5+5,5 Sek) oder einfach langsam und tief. Ziel: Herzrate senken, Geist beruhigen. Keine hektischen Gedanken.',
-      },
-      {
-        title: 'Letzter Atemzug',
-        text: 'Atme tief durch die Nase ein – voll, aber nicht bis zur Schmerzgrenze. Lippen schließen. Nase entspannt halten. Starte deine mentale Uhr.',
-      },
-      {
-        title: 'Die ersten 20 Sekunden',
-        text: 'Fokussiere dich auf Entspannung. Kein Kämpfen, keine Anspannung. Lass alle Muskeln locker. Der Atemreiz ist noch nicht aktiv – genieße die Stille.',
-      },
-      {
-        title: 'Den Atemreiz erkennen (Zwerchfellkontraktionen)',
-        text: 'Du wirst ein Ziehen oder Zucken im Zwerchfell spüren – das ist das CO₂-Signal. Nicht Panik, nicht Gefahr. Nur Information. Zähle: Wann beginnt der erste Reiz?',
-      },
-      {
-        title: '10 Sekunden über den Reiz hinaus',
-        text: 'Bleibe genau 10 Sekunden bewusst nach dem ersten starken Atemreiz. Bleibe entspannt, entspanne Gesicht und Schultern aktiv. Diese 10 Sekunden sind das Training. Dann ausatmen.',
-      },
-      {
-        title: 'Erholung und 3 Runden',
-        text: 'Erholung: 2 Minuten normale Atmung. Dann nochmals. Ziel: 3 Runden pro Session. Notiere nach jeder Runde wie lange du gehalten hast und wann der Reiz begann.',
-      },
-    ],
-    tips: [
-      'Niemals Hyperventilieren vor dem Atemanhalten – gefährlich!',
-      'Der Atemreiz ist KEIN Zeichen von Sauerstoffmangel – es ist CO₂',
-      'Entspannung verlängert die Zeit mehr als Willenskraft',
-      'Das Apnoe-Trainingsmodul dieser App führt dich strukturiert weiter',
-    ],
-  },
-
-  {
     id: 'imagination-positiver-emotionen',
     name: 'Imagination positiver Emotionen',
     category: 'meditation',
@@ -468,383 +415,6 @@ export const exercises = [
   },
 
   {
-    id: 'fokus-briefing',
-    name: 'Fokus Briefing',
-    category: 'fokus',
-    duration: '5 Minuten',
-    shortDesc: '5-Min Morgenroutine – klare Intention und ein Schlüsselwort für den Tag setzen',
-    icon: '◎',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Das Fokus Briefing ist eine 5-minütige Morgenroutine, die deinen Tag bewusst startet. Du setzt eine klare Intention und wählst ein Schlüsselwort, das dich den ganzen Tag in deinem Zustand hält.',
-    steps: [
-      {
-        title: 'Ruhige Atmung – 1 Min',
-        text: 'Setze dich aufrecht hin, bevor du in den Tag startest. 1 Minute Kohärenzatmung oder einfach tiefes, langsames Atmen. Lass die Nacht los.',
-      },
-      {
-        title: 'Rückblick – Was lasse ich hinter mir?',
-        text: 'Frage dich: Was war gestern unfertig, belastend oder störend? Schreibe es auf oder benenne es innerlich. Dann: Bewusste Entscheidung, es heute hinter dir zu lassen.',
-      },
-      {
-        title: 'Intention formulieren',
-        text: 'Formuliere eine klare Absicht: "Heute möchte ich …" Nicht eine To-do-Liste. Eine Aussage darüber, wer du heute sein möchtest oder was dir wirklich wichtig ist. Ein Satz genügt.',
-      },
-      {
-        title: 'Schlüsselwort wählen',
-        text: 'Wähle ein Wort, das deine heutige Intention verkörpert. Beispiele: Ruhe, Fokus, Präsenz, Energie, Verbindung, Kreativität. Dieses Wort ist dein Anker für den Tag.',
-      },
-      {
-        title: 'Schlüsselwort verankern',
-        text: 'Spreche das Wort 3 Mal innerlich oder leise aus. Atme dazwischen tief. Spüre was das Wort in dir auslöst. Schreibe es auf dein Handgelenk oder als Notiz aufs Handy.',
-      },
-      {
-        title: 'Abschluss',
-        text: 'Ein tiefer Einatemzug. Beim Ausatmen: loslassen. Du bist bereit. Das Briefing ist abgeschlossen.',
-      },
-    ],
-    tips: [
-      'Täglich zur selben Zeit durchführen – am besten vor dem ersten Bildschirm',
-      'Das Schlüsselwort sichtbar aufschreiben (Notiz, Whiteboard, Handrücken)',
-      'Wenn du abschweifst: Schlüsselwort innerlich wiederholen',
-      'Kombiniere mit der DeepFlow Methode für eine 15-Min Morgenroutine',
-    ],
-  },
-
-  {
-    id: '4-7-8-atmung',
-    name: '4-7-8 Einschlafen',
-    category: 'einschlafen',
-    duration: '4–8 Runden',
-    shortDesc: 'Natürliches Beruhigungsmittel – verlangsamt Herzrate und schaltet Geist ab',
-    icon: '◐',
-    hasTimer: true,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Die 4-7-8 Atmung (nach Dr. Andrew Weil) ist eine der wirksamsten Techniken zum Einschlafen. Die lange Ausatmung und das ausgedehnte Halten beruhigen das Nervensystem in Minuten.',
-    timerPattern: {
-      defaultDuration: 240,
-      phases: [
-        { name: 'Einatmen', type: 'in', duration: 4, color: 'blue', instruction: 'Ruhig durch die Nase' },
-        { name: 'Halten', type: 'hold', duration: 7, color: 'indigo', instruction: 'Atem oben sanft halten' },
-        { name: 'Ausatmen', type: 'out', duration: 8, color: 'purple', instruction: 'Vollständig durch den Mund ausatmen' },
-      ],
-    },
-    steps: [
-      {
-        title: 'Im Bett liegen',
-        text: 'Leg dich auf den Rücken. Zunge hinter den oberen Schneidezähnen am Gaumen. Augen schließen. 1–2 normale Atemzüge.',
-      },
-      {
-        title: '4 Sek einatmen',
-        text: 'Ruhig durch die Nase einatmen. 4 Sekunden. Keine Eile – gleichmäßig und tief.',
-      },
-      {
-        title: '7 Sek halten',
-        text: 'Atem oben halten. 7 Sekunden. Entspannt – keine Anspannung. Die Zunge bleibt am Gaumen.',
-      },
-      {
-        title: '8 Sek ausatmen',
-        text: 'Durch leicht geöffnete Lippen ausatmen. 8 Sekunden. Zischen oder sanftes "Ffff". Lunge vollständig leeren.',
-      },
-      {
-        title: '4–8 Runden',
-        text: 'Wiederhole 4–8 Mal. Viele Menschen schlafen bereits nach 4 Runden ein. Wenn nicht: weitermachen oder zum Bodyscan wechseln.',
-      },
-    ],
-    tips: [
-      'Die Ratio 4:7:8 ist entscheidend – nicht die absoluten Zeiten',
-      'Auch mit doppelten Zeiten (8:14:16) möglich',
-      'Falls Schwindel: Tempo reduzieren, kleiner atmen',
-      'Täglich einsetzen – Wirkung verstärkt sich mit Übung',
-    ],
-  },
-
-  {
-    id: 'brustkorbdehnung',
-    name: 'Brustkorbdehnung',
-    category: 'apnoe',
-    duration: '10–15 Minuten',
-    shortDesc: 'Drei Dehnungsübungen in 3 Stufen – Uddiyana Bandha, Seitdehnung, Brustöffner',
-    icon: '❋',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Ein flexibler Brustkorb ist die Voraussetzung für große Lungenvolumina. Diese drei Übungen dehnen Zwerchfell, Rippenmuskeln und Brustwirbelsäule systematisch – und erhöhen direkt das nutzbare Atemvolumen.',
-    stages: [
-      {
-        id: 1,
-        name: 'Stufe 1 – Einstieg',
-        duration: '8–10 Min',
-        description: 'Grundpositionen mit Abstützung. Lerne die Bewegung kennen.',
-        color: 'cyan',
-        steps: [
-          {
-            title: 'Uddiyana Bandha – Grundposition',
-            duration: 90,
-            text: 'Stehe aufrecht, Füße schulterbreit. Atme vollständig aus – bis die Lungen leer sind. Beuge dich leicht nach vorne, Hände auf die Oberschenkel. Erschaffe ein falsches Einatmen: Ziehe den Bauch nach innen und oben, als würdest du einatmen – ohne Luft hereinzulassen. Halte 5–10 Sekunden, dann tief einatmen.',
-          },
-          {
-            title: 'Seitliche Brustkorbdehnung – Einseitig rechts',
-            duration: 60,
-            text: 'Stehe aufrecht. Hebe den rechten Arm über den Kopf, beuge dich kontrolliert nach links. Atme tief in die rechte Seite des Brustkorbs – spüre die Dehnung zwischen den Rippen. 5 tiefe Atemzüge halten.',
-          },
-          {
-            title: 'Seitliche Brustkorbdehnung – Einseitig links',
-            duration: 60,
-            text: 'Seitenwechsel: Linken Arm hoch, nach rechts beugen. Atme in die linke Seite des Brustkorbs. 5 tiefe Atemzüge halten.',
-          },
-          {
-            title: 'Vordere Brustkorbdehnung – Brustöffner',
-            duration: 90,
-            text: 'Stehe oder sitze aufrecht. Verschränke die Hände hinter dem Rücken. Drücke die Schultern nach hinten und unten, hebe den Brustkorb nach vorne und oben. Atme tief in die Brust ein. 5–8 tiefe Atemzüge.',
-          },
-        ],
-      },
-      {
-        id: 2,
-        name: 'Stufe 2 – Vertiefung',
-        duration: '10–12 Min',
-        description: 'Intensiviere die Dehnung mit Halten und aktiver Atemführung.',
-        color: 'blue',
-        steps: [
-          {
-            title: 'Uddiyana Bandha – Halten 15–20 Sek',
-            duration: 120,
-            text: 'Wie Stufe 1, aber halte den Bandha länger. Steigere schrittweise auf 15–20 Sekunden. 3 Runden mit voller Erholungsatmung dazwischen. Uddiyana massiert Zwerchfell und Bauchorgane.',
-          },
-          {
-            title: 'Seitliche Dehnung – Mit Ausatmungs-Sinken',
-            duration: 90,
-            text: 'Rechte Seite: Beim Ausatmen lass den gehobenen Arm aktiv tiefer sinken, verstärke die Seitwärtsbeugung. Die Dehnung intensiviert sich in der Ausatmung. 5 Atemzüge pro Seite.',
-          },
-          {
-            title: 'Seitliche Dehnung – Linke Seite',
-            duration: 90,
-            text: 'Seitenwechsel. Wieder beim Ausatmen aktiv tiefer sinken. 5 Atemzüge.',
-          },
-          {
-            title: 'Vordere Brustkorbdehnung – Mit Kopfneigung',
-            duration: 90,
-            text: 'Brustöffner + Kopf leicht nach hinten neigen, Kinn zur Decke. Vorderseite des Halses und Sternum öffnen sich. Atemzüge in den oberen Brustbereich lenken. 5 Atemzüge.',
-          },
-        ],
-      },
-      {
-        id: 3,
-        name: 'Stufe 3 – Fortgeschritten',
-        duration: '12–15 Min',
-        description: 'Freie Ausführung, beide Arme oben, Rückenatmung.',
-        color: 'purple',
-        steps: [
-          {
-            title: 'Uddiyana Bandha – Aufrecht stehend',
-            duration: 150,
-            text: 'Übung jetzt aufrecht ohne Abstützen ausführen. Arme locker an den Seiten. Erfordert mehr Körperkontrolle. 3–5 Runden à 10–15 Sekunden Halten mit voller Erholung dazwischen.',
-          },
-          {
-            title: 'Seitliche Dehnung – Beide Arme oben rechts',
-            duration: 90,
-            text: 'Falte die Hände über dem Kopf. Beuge dich nach rechts. Bewusstes Einatmen in die jeweilige Dehnung. 10 Wiederholungen mit vollem Atemzug pro Seite.',
-          },
-          {
-            title: 'Seitliche Dehnung – Beide Arme oben links',
-            duration: 90,
-            text: 'Wechsel: nach links beugen. 10 Wiederholungen mit vollem Atemzug.',
-          },
-          {
-            title: 'Hintere Brustkorbdehnung – Rundrücken',
-            duration: 120,
-            text: 'Setze dich, falte die Hände vor dem Bauch, runde den Rücken maximal. Kinn zur Brust. Atme jetzt in den Rücken – spüre, wie sich die hinteren Rippenbögen öffnen. 5–8 tiefe Atemzüge in den Rücken.',
-          },
-        ],
-      },
-    ],
-    steps: [
-      {
-        title: 'Uddiyana Bandha – Stufe 1: Grundposition',
-        text: 'Stehe aufrecht, Füße schulterbreit. Atme vollständig aus – bis die Lungen leer sind. Beuge dich leicht nach vorne, Hände auf die Oberschenkel. Erschaffe nun ein falsches Einatmen: Ziehe den Bauch nach innen und oben, als würdest du einatmen – ohne Luft hereinzulassen. Du wirst eine tiefe Hohlkehle spüren.',
-      },
-      {
-        title: 'Uddiyana Bandha – Stufe 2: Halten und Intensivieren',
-        text: 'Halte den Bandha 5–10 Sekunden. Dann tief einatmen und normal weiterpusten. Drei Runden. Steigere das Halten schrittweise auf 15–20 Sekunden. Uddiyana Bandha massiert Zwerchfell und Bauchorgane und dehnt den unteren Rippenbogen.',
-      },
-      {
-        title: 'Uddiyana Bandha – Stufe 3: Im Stehen',
-        text: 'Führe die Übung jetzt aufrecht durch ohne Abstützen. Arme locker an den Seiten. Dies erfordert mehr Körperkontrolle. 3–5 Runden à 10–15 Sekunden Halten.',
-      },
-      {
-        title: 'Seitliche Brustkorbdehnung – Stufe 1: Einseitig',
-        text: 'Stehe aufrecht. Hebe den rechten Arm über den Kopf, beugle dich kontrolliert nach links. Atme tief in die rechte Seite des Brustkorbs – du spürst die Dehnung zwischen den Rippen. 5 tiefe Atemzüge halten, dann Seite wechseln.',
-      },
-      {
-        title: 'Seitliche Brustkorbdehnung – Stufe 2: Mit Ausatmungsarm',
-        text: 'Beim Ausatmen lass den gehobenen Arm aktiv tiefer sinken und verstärke die Seitwärtsbeugung. Die Dehnung intensiviert sich in der Ausatmung. 5 Atemzüge pro Seite, 2–3 Durchgänge.',
-      },
-      {
-        title: 'Seitliche Brustkorbdehnung – Stufe 3: Beide Arme oben',
-        text: 'Falte die Hände über dem Kopf, beuge nach rechts und dann nach links. Bewusstes Einatmen in die jeweilige Dehnung. 10 Wiederholungen pro Seite mit vollem Atemzug.',
-      },
-      {
-        title: 'Vordere Brustkorbdehnung – Stufe 1: Brustöffner',
-        text: 'Stehe oder sitze aufrecht. Verschränke die Hände hinter dem Rücken. Drücke die Schultern nach hinten und unten, hebe den Brustkorb nach vorne und oben. Atme tief in die Brust ein. 5–8 tiefe Atemzüge.',
-      },
-      {
-        title: 'Vordere Brustkorbdehnung – Stufe 2: Intensivierung',
-        text: 'Zusätzlich zum Brustöffner: Kopf leicht nach hinten neigen, Kinn zur Decke. Die Vorderseite des Halses und das Sternum öffnen sich weiter. Atemzüge in den oberen Brustbereich lenken. 5 Atemzüge.',
-      },
-      {
-        title: 'Hintere Brustkorbdehnung – Stufe 3: Rundrücken',
-        text: 'Setze dich, falte die Hände vor dem Bauch, runde den Rücken maximal. Kinn zur Brust. Atme jetzt in den Rücken – spüre, wie sich die hinteren Rippenbögen öffnen. 5–8 tiefe Atemzüge in den Rücken. Dies ist die häufig vernachlässigte Dimension.',
-      },
-    ],
-    tips: [
-      'Uddiyana Bandha niemals nach dem Essen – mindestens 3–4 Std. Abstand',
-      'Bei Schwindel beim Uddiyana: Pause, normal atmen',
-      'Regelmäßiges Dehnen erhöht das Lungenvolumen messbar über Monate',
-      'Kombiniere mit der Zyklischen Vollatmung direkt danach',
-    ],
-  },
-
-  {
-    id: 'fuenf-finger-technik',
-    name: '5-Finger-Technik',
-    category: 'entspannung',
-    duration: '1–2 Minuten',
-    shortDesc: '5 Sinne als Anker – sofortige Erdung im Jetzt durch bewusste Sinneswahrnehmung',
-    icon: '✋',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Die 5-Finger-Technik nutzt die fünf Sinne als Anker in die Gegenwart. Bei Stress oder Überflutung durch Gedanken holt sie dich sofort ins Jetzt zurück – wirkungsvoll, unauffällig, jederzeit einsetzbar.',
-    steps: [
-      {
-        title: 'Vorbereitung',
-        text: 'Halte eine Hand offen vor dir oder lege sie auf den Oberschenkel. Atme einmal tief aus. Gehe jetzt Finger für Finger durch, ohne zu eilen.',
-      },
-      {
-        title: 'Daumen – SEHEN',
-        text: 'Berühre den Daumen und frage: Was sehe ich gerade wirklich? Benenne 3 Dinge, die du jetzt konkret siehst – Farben, Formen, Bewegungen. Nicht interpretieren, nur benennen. "Ich sehe die weiße Wand. Den Schatten des Fensters. Die Körnung des Tisches."',
-      },
-      {
-        title: 'Zeigefinger – HÖREN',
-        text: 'Berühre den Zeigefinger. Was hörst du gerade? Lausche bewusst: Geräusche nah und fern, laut und leise. Benenne 3 Geräusche konkret. Auch Stille ist ein Klang.',
-      },
-      {
-        title: 'Mittelfinger – FÜHLEN',
-        text: 'Berühre den Mittelfinger. Was spürst du körperlich? Die Kleidung auf der Haut, den Druck des Stuhls, die Temperatur der Luft. Nicht Emotionen – körperliche Empfindungen. Benenne 3.',
-      },
-      {
-        title: 'Ringfinger – RIECHEN',
-        text: 'Berühre den Ringfinger. Welche Gerüche nimmst du wahr? Auch wenn es schwach ist – nimm dir Zeit. Raumluft, eigene Haut, Kaffee, Holz. Benenne was da ist, auch wenn es "nichts Besonderes" ist.',
-      },
-      {
-        title: 'Kleiner Finger – SCHMECKEN',
-        text: 'Berühre den kleinen Finger. Was schmeckst du? Den letzten Schluck Kaffee, Zahnpasta, nichts, neutrales Mundgefühl. Lasse die Aufmerksamkeit kurz auf der Zunge ruhen.',
-      },
-      {
-        title: 'Abschluss – Atemzug',
-        text: 'Alle fünf Finger wurden besucht. Lege jetzt beide Hände auf die Knie. Ein langer, tiefer Atemzug. Beim Ausatmen: spüre, wie du geerdet und präsent bist. Der Gedankensturm ist leiser.',
-      },
-    ],
-    tips: [
-      'Funktioniert auch in Meetings – diskret mit einer Hand unter dem Tisch',
-      'Bei Panikattacken: sofort starten, nicht warten bis es schlimmer wird',
-      'Kombination mit 4-7-8 Atmung danach verstärkt die Wirkung',
-      'Kinder können die Technik ab ca. 6 Jahren lernen',
-    ],
-  },
-
-  {
-    id: 'gedankenstopp',
-    name: 'Gedankenstopp',
-    category: 'fokus',
-    duration: '2–5 Minuten',
-    shortDesc: 'Gedankenspirale unterbrechen – 6 Schritte von der Eskalation zum klaren Fokus',
-    icon: '⊘',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Gedankenspiralen entstehen, wenn ein negativer Gedanke den nächsten auslöst – bis Körper und Geist im Alarmzustand sind. Der Gedankenstopp unterbricht diesen Kreislauf mit einem gezielten mentalen Eingriff.',
-    steps: [
-      {
-        title: 'Schritt 1: Eskalation erkennen',
-        text: 'Beobachte, wann Gedanken eskalieren. Typische Zeichen: du grübelst im Kreis, denkst in Katastrophenszenarien ("Was wäre wenn…"), spürst zunehmende körperliche Anspannung, Herzrasen oder Enge in der Brust. Das Erkennen ist der erste und wichtigste Schritt.',
-      },
-      {
-        title: 'Schritt 2: STOPP-Signal setzen',
-        text: 'Sobald du die Eskalation erkennst: Sage innerlich oder laut das Wort "STOPP". Klar. Direkt. Nicht als Frage, als Aussage. Du kannst gleichzeitig eine Hand flach auf die Brust legen oder auf den Tisch schlagen – der körperliche Anker verstärkt das Signal.',
-      },
-      {
-        title: 'Schritt 3: Einen Schritt zurücktreten',
-        text: 'Stelle dir bildlich vor, du trittst einen Schritt zurück aus der Situation. Du bist jetzt Beobachter deiner Gedanken, nicht Teil des Strudels. Die Gedanken sind wie Wolken, die du von einem Berg aus siehst – du bist nicht die Wolke.',
-      },
-      {
-        title: 'Schritt 4: Tief atmen',
-        text: 'Jetzt: Ein langer, tiefer Atemzug durch die Nase. Halte kurz an. Langsam durch den Mund ausatmen – doppelt so lang wie das Einatmen. Wiederhole 3 Mal. Das Nervensystem wechselt den Gang.',
-      },
-      {
-        title: 'Schritt 5: Fokus neu setzen',
-        text: 'Frage dich nach dem Ausatmen: "Was ist jetzt – in diesem Moment – wirklich wahr?" Nicht was könnte sein, nicht was gestern war. Was ist jetzt konkret, faktisch, real? Benenne es in einem Satz.',
-      },
-      {
-        title: 'Schritt 6: Weiter oder wiederholen',
-        text: 'Wenn der Gedankenfluss wieder klar ist: weiter machen. Wenn der Sog zurückkommt: sofort wieder ab Schritt 2. Je häufiger du übst, desto kleiner wird das Zeitfenster, in dem die Spirale dich hat.',
-      },
-    ],
-    tips: [
-      'Übe zuerst bei kleinen Ärgernissen – nicht bei der größten Krise',
-      'Das körperliche STOPP-Signal (Hand, Armband tippen) verstärkt die Unterbrechung',
-      'Kombiniere mit dem Fokus Briefing morgens, um den Tag robuster zu starten',
-      'Perfekt als Vorbereitung vor Apnoe-Training – kein mentales Rauschen',
-    ],
-  },
-
-  {
-    id: 'atemmuskeltraining',
-    name: 'Atemmuskeltraining',
-    category: 'apnoe',
-    duration: '5–8 Minuten pro Stufe',
-    shortDesc: 'Zwerchfell und Atemhilfsmuskel stärken – mit Relaxator oder Strohhalm',
-    icon: '◈',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Atemmuskeltraining erhöht die Kraft und Ausdauer des Zwerchfells und der Atemhilfsmuskulatur. Dies verlängert die Apnoe-Zeit und verbessert die Effizienz aller Atemübungen. Ein Relaxator oder dicker Strohhalm erhöht den Atemwiderstand.',
-    steps: [
-      {
-        title: 'Material',
-        text: 'Besorge einen Relaxator (spezieller Atemtrainer) oder nutze einen dickeren Trinkhalm (ca. 5–8mm Durchmesser). Das Ziel ist erhöhter Widerstand beim Ein- und/oder Ausatmen.',
-      },
-      {
-        title: 'Stufe 1: Grundspannung aufbauen (5 Min)',
-        text: 'Setze den Strohhalm oder Relaxator ein. Atme ruhig und gleichmäßig ein und aus – durch das Hilfsmittel. Das Einatmen erfordert mehr Kraft als gewohnt. Spüre, wie das Zwerchfell arbeitet. Halte Tempo niedrig, Atemzüge vollständig. 5 Minuten im normalen Alltagsrhythmus atmen.',
-      },
-      {
-        title: 'Stufe 1: Wahrnehmung',
-        text: 'Nach 2–3 Minuten wirst du eine leichte Ermüdung der Atemmuskeln spüren – das ist das Zeichen, dass es wirkt. Bleibe entspannt, kein Verkrampfen. Schultern nicht hochziehen.',
-      },
-      {
-        title: 'Stufe 2: Atemkontrolle intensivieren (5–8 Min)',
-        text: 'Nutze jetzt bewusste Atemrhythmen: 4 Sek einatmen (durch Strohhalm), 6 Sek ausatmen (durch Strohhalm). Der Widerstand in beiden Phasen trainiert sowohl Einatmungs- als auch Ausatmungsmuskel. 5–8 Minuten halten.',
-      },
-      {
-        title: 'Stufe 2: Progression',
-        text: 'Wenn der Rhythmus leicht fällt: Verlängere auf 5+8 Sek oder 6+10 Sek. Ziel ist, dass die Muskeln am Ende der Einheit leicht ermüdet, aber nicht erschöpft sind.',
-      },
-      {
-        title: 'Stufe 3: Belastung steigern (5–8 Min)',
-        text: 'Führe jetzt Zyklische Vollatmung durch den Strohhalm durch: Tief einatmen (Bauch → Brust), kleiner Extra-Schluck, passiv ausatmen. Der erhöhte Widerstand bei vollem Atem fordert die Atemmuskulatur maximal. 3–5 Minuten.',
-      },
-      {
-        title: 'Stufe 3: Abschluss',
-        text: 'Lege den Strohhalm weg. Atme 1–2 Minuten normal ohne Hilfsmittel. Du wirst spüren, wie die Atmung jetzt leichter und tiefer wirkt – der Kontrasteffekt. Notiere deine Trainingszeit.',
-      },
-    ],
-    tips: [
-      'Relaxatoren bei Apnoe-Ausrüstern oder online erhältlich (ca. 10–15 €)',
-      'Alternativ: Tauchschnorchel mit gedrosseltem Einlass',
-      'Täglich 10 Min reichen für messbare Verbesserung nach 4–6 Wochen',
-      'Nie unmittelbar vor Apnoe-Training – Atemmuskel sollten ausgeruht sein',
-    ],
-  },
-
-  {
     id: 'farbraummeditation',
     name: 'Farbraummeditation',
     category: 'meditation',
@@ -886,86 +456,6 @@ export const exercises = [
       'Ideal am Abend oder nach intensivem Training',
       'Die Begleitperson kann auch eine verstorbene, imaginäre oder symbolische Figur sein',
       'Tagebuch danach: Was hast du in den Räumen erlebt?',
-    ],
-  },
-
-  {
-    id: 'hand-auf-herz',
-    name: 'Hand-auf-Herz-Technik',
-    category: 'entspannung',
-    duration: '1–3 Minuten',
-    shortDesc: 'Selbstmitgefühl aktivieren – Wärme und Beruhigung durch Herzberührung',
-    icon: '♡',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Die Hand auf dem Herzen aktiviert das Selbstfürsorge-System im Gehirn. Schon die physische Berührung über dem Herzen senkt Cortisol und aktiviert Oxytocin – auch wenn du dich selbst berührst. Einfach, überall anwendbar, sofort wirksam.',
-    steps: [
-      {
-        title: 'Hand auf Herz legen',
-        text: 'Lege eine Hand flach auf deine Brust – über das Herz. Spüre den Kontakt: die Wärme der Hand, die Bewegung des Brustkorbs, den Herzschlag, wenn er spürbar ist. Keine spezielle Haltung nötig.',
-      },
-      {
-        title: 'Wärme spüren und einatmen',
-        text: 'Atme langsam und tief ein. Stelle dir vor, die Wärme deiner Hand fließt beim Einatmen in den Herzbereich – wie warmes Licht, das sich ausbreitet. Keine Anstrengung – nur wahrnehmen und empfangen.',
-      },
-      {
-        title: 'Langsam ausatmen',
-        text: 'Atme noch langsamer aus, als du eingeatmet hast. Beim Ausatmen: lass alles los, was du trägst. Die Hand bleibt auf dem Herzen. Spüre, wie sich Schultern und Kiefer entspannen.',
-      },
-      {
-        title: 'Freundlicher innerer Satz (optional)',
-        text: 'Wenn es sich richtig anfühlt: Sage dir innerlich einen freundlichen Satz. Zum Beispiel: "Es ist okay, so zu sein, wie ich bin." Oder: "Ich bin auf meiner Seite." Keine Bewertung, ob es "funktioniert" – nur sein lassen.',
-      },
-      {
-        title: '1 Minute – oder so lange wie nötig',
-        text: 'Bleibe mindestens 1 Minute so. Viele Menschen spüren nach 60 Sekunden eine spürbare Verschiebung – von Anspannung zu einer weicheren Offenheit. Wenn du mehr Zeit hast: bleib länger.',
-      },
-    ],
-    tips: [
-      'Kann unauffällig unter dem Tisch oder in der Tasche in der Westentasche durchgeführt werden',
-      'Besonders wirksam bei Selbstkritik und inneren Vorwürfen',
-      'Aus der Selbstmitgefühlsforschung von Dr. Kristin Neff belegt',
-      'Variante: Beide Hände übereinander legen für intensivere Wirkung',
-    ],
-  },
-
-  {
-    id: 'reflexion-perspektivwechsel',
-    name: 'Reflexion & Perspektivwechsel',
-    category: 'fokus',
-    duration: '5–10 Minuten',
-    shortDesc: 'Stressige Situation analysieren und durch neuen Blickwinkel auflösen',
-    icon: '⟳',
-    hasTimer: false,
-    source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Viele Stresssituationen entstehen nicht durch das Ereignis selbst, sondern durch die Interpretation, die wir ihm geben. Diese Übung macht den Interpretationsprozess bewusst und öffnet Raum für neue, hilfreiche Sichtweisen.',
-    steps: [
-      {
-        title: 'Schritt 1: Stressige Situation analysieren',
-        text: 'Wähle eine konkrete Situation, die dich belastet oder in der du feststeckst. Beschreibe sie in 2–3 Sätzen so neutral und sachlich wie möglich – als wärst du Journalist, der berichtet. Nur Fakten, keine Bewertungen.',
-      },
-      {
-        title: 'Schritt 2: Gedanken und Emotionen benennen',
-        text: 'Was denkst du über diese Situation? Welche automatischen Gedanken kommen? ("Das ist unfair", "Ich schaffe das nie", "Die anderen denken schlecht über mich".) Schreibe oder denke jeden Gedanken explizit. Dann: Welche Emotion verbindest du damit? Wut, Angst, Enttäuschung, Scham?',
-      },
-      {
-        title: 'Schritt 3: Alternative Sichtweise entwickeln',
-        text: 'Jetzt der entscheidende Schritt: Frage dich – wie würde jemand, der dich liebt und klug ist, diese Situation sehen? Oder: Wie wirst du in 5 Jahren darauf zurückblicken? Oder: Was könnte diese Situation mir beibringen? Nimm dir Zeit. Zwinge nichts.',
-      },
-      {
-        title: 'Schritt 4: Neuen Gedanken formulieren',
-        text: 'Formuliere einen neuen, realistisch-positiven Gedanken über die Situation. Nicht falscher Optimismus, sondern eine breitere Wahrheit. Beispiel: Statt "Ich habe versagt" → "Ich habe etwas gelernt, das ich vorher nicht wusste."',
-      },
-      {
-        title: 'Schritt 5: Effekt spüren und verankern',
-        text: 'Sage den neuen Gedanken 3 Mal innerlich. Wie verändert sich dein Körpergefühl? Spüre die Wirkung physisch. Atme tief ein und aus. Der neue Gedanke ist nicht Selbstbetrug – er ist eine weitere Wahrheit, die du zuvor nicht gesehen hast.',
-      },
-    ],
-    tips: [
-      'Schreiben verstärkt die Wirkung erheblich – Stift und Papier nutzen',
-      'Nicht bei akuter emotionaler Flut – erst Emotionen beruhigen (Hand-auf-Herz), dann reflektieren',
-      'Kombiniere mit dem Fokus Briefing am Morgen',
-      'Je öfter geübt, desto schneller entsteht der Perspektivwechsel spontan im Alltag',
     ],
   },
 
@@ -1016,7 +506,7 @@ export const exercises = [
   {
     id: 'nsdr',
     name: 'NSDR – Non Sleep Deep Rest',
-    category: 'einschlafen',
+    category: 'meditation',
     duration: '10 Minuten',
     shortDesc: 'Non-Sleep Deep Rest – tiefe Erholung ohne Schlaf, ideal nach dem Mittagessen oder bei Erschöpfung',
     icon: '◑',
@@ -1057,7 +547,7 @@ export const exercises = [
   {
     id: 'morning-breathwork',
     name: 'Morning Breathwork',
-    category: 'energie',
+    category: 'meditation',
     duration: '15 Minuten',
     shortDesc: 'Geführtes Atemtraining für einen energievollen Start in den Tag',
     icon: '▲',
@@ -1098,7 +588,7 @@ export const exercises = [
   {
     id: '7min-breathwork-energie',
     name: '7 Min Breathwork für Energie',
-    category: 'energie',
+    category: 'meditation',
     duration: '7 Minuten',
     shortDesc: 'Kurzes intensives Atemtraining für sofortige Energie',
     icon: '◆',
@@ -1128,51 +618,220 @@ export const exercises = [
     ],
   },
 
+  // ─── MENTALTECHNIK ───────────────────────────────────────────────────────────
   {
-    id: 'zwerchfellatmung-training',
-    name: 'Zwerchfellatmung Training',
-    category: 'apnoe',
+    id: 'reflexion-perspektivwechsel',
+    name: 'Reflexion & Perspektivwechsel',
+    category: 'mental',
     duration: '5–10 Minuten',
-    shortDesc: 'Zwerchfell isolieren und stärken – Bauch hebt sich, Brust bleibt ruhig',
-    icon: '⊙',
+    shortDesc: 'Stressige Situation analysieren und durch neuen Blickwinkel auflösen',
+    icon: '⟳',
     hasTimer: false,
     source: 'Tom Sietas – Deine Atmung ändert alles',
-    intro: 'Die Zwerchfellatmung ist die effizienteste und gesündeste Atemform – und gleichzeitig für viele Menschen ungewohnt. Dieses Training isoliert das Zwerchfell, sodass du bewusst lernst, tief und effizient zu atmen.',
+    intro: 'Viele Stresssituationen entstehen nicht durch das Ereignis selbst, sondern durch die Interpretation, die wir ihm geben. Diese Übung macht den Interpretationsprozess bewusst und öffnet Raum für neue, hilfreiche Sichtweisen.',
     steps: [
       {
-        title: 'Ausgangslage',
-        text: 'Lege dich auf den Rücken, Knie leicht angewinkelt. Entspanne alle Muskeln. Lege eine Hand flach auf den Bauch (Nabelbereich) und die andere auf die Brust. Diese beiden Hände sind dein Feedback-System.',
+        title: 'Schritt 1: Stressige Situation analysieren',
+        text: 'Wähle eine konkrete Situation, die dich belastet oder in der du feststeckst. Beschreibe sie in 2–3 Sätzen so neutral und sachlich wie möglich – als wärst du Journalist, der berichtet. Nur Fakten, keine Bewertungen.',
       },
       {
-        title: 'Wahrnehmung der aktuellen Atmung',
-        text: 'Atme zunächst ganz normal. Welche Hand hebt sich mehr – Bauch oder Brust? Die meisten Erwachsenen atmen überwiegend in die Brust (Stressatemmuster). Das ist der Ausgangspunkt.',
+        title: 'Schritt 2: Gedanken und Emotionen benennen',
+        text: 'Was denkst du über diese Situation? Welche automatischen Gedanken kommen? ("Das ist unfair", "Ich schaffe das nie", "Die anderen denken schlecht über mich".) Schreibe oder denke jeden Gedanken explizit. Dann: Welche Emotion verbindest du damit? Wut, Angst, Enttäuschung, Scham?',
       },
       {
-        title: 'Zwerchfell aktivieren',
-        text: 'Atme jetzt bewusst so ein, dass sich NUR die Bauchhand hebt. Die Brust bleibt ruhig – die Brusthand bewegt sich kaum. Stelle dir vor, du füllst zuerst den Bauch wie einen Ballon, bevor die Brust folgt.',
+        title: 'Schritt 3: Alternative Sichtweise entwickeln',
+        text: 'Jetzt der entscheidende Schritt: Frage dich – wie würde jemand, der dich liebt und klug ist, diese Situation sehen? Oder: Wie wirst du in 5 Jahren darauf zurückblicken? Oder: Was könnte diese Situation mir beibringen? Nimm dir Zeit. Zwinge nichts.',
       },
       {
-        title: 'Korrekte Einatmung üben',
-        text: 'Einatmen (4 Sek): Bauch hebt sich nach oben und außen. Brust bleibt still. Falls die Brust sich hebt: Bauchhand leicht drücken als Gegenwiderstand. Ausatmen (6 Sek): Bauch senkt sich passiv. Keine Muskeln pressen.',
+        title: 'Schritt 4: Neuen Gedanken formulieren',
+        text: 'Formuliere einen neuen, realistisch-positiven Gedanken über die Situation. Nicht falscher Optimismus, sondern eine breitere Wahrheit. Beispiel: Statt "Ich habe versagt" → "Ich habe etwas gelernt, das ich vorher nicht wusste."',
       },
       {
-        title: 'Intensivierung: Aktives Bauchsenken',
-        text: 'In der Ausatmung: Ziehe den Bauch aktiv nach innen und oben (sanftes Uddiyana). Dies kräftigt das Zwerchfell in beiden Bewegungsrichtungen. 10 Atemzüge mit bewusstem Bauchziehen beim Ausatmen.',
-      },
-      {
-        title: 'Im Sitzen und Stehen',
-        text: 'Sobald du die Bewegung im Liegen sicher hast: übe im Sitzen, dann im Stehen. Im Alltag ist das Sitzen die häufigste Position. Das Ziel: Zwerchfellatmung als Standard-Atemmuster – automatisch, ohne Nachdenken.',
-      },
-      {
-        title: 'Integration in den Alltag',
-        text: 'Setze dir einen Handywecker für dreimal täglich: In diesen Momenten 10 bewusste Zwerchfellatemzüge. Nach 3–4 Wochen wird die Zwerchfellatmung zur neuen Normalität.',
+        title: 'Schritt 5: Effekt spüren und verankern',
+        text: 'Sage den neuen Gedanken 3 Mal innerlich. Wie verändert sich dein Körpergefühl? Spüre die Wirkung physisch. Atme tief ein und aus. Der neue Gedanke ist nicht Selbstbetrug – er ist eine weitere Wahrheit, die du zuvor nicht gesehen hast.',
       },
     ],
     tips: [
-      'Täglich 5 Minuten reichen – Konstanz schlägt Intensität',
-      'Überprüfe im Liegen wöchentlich deinen Fortschritt',
-      'Kombination mit Atemmuskeltraining für maximale Apnoe-Vorbereitung',
-      'Bei anhaltender Brustatmung trotz Training: Atemphysiotherapeuten konsultieren',
+      'Schreiben verstärkt die Wirkung erheblich – Stift und Papier nutzen',
+      'Nicht bei akuter emotionaler Flut – erst Emotionen beruhigen (Hand-auf-Herz), dann reflektieren',
+      'Kombiniere mit dem Fokus Briefing am Morgen',
+      'Je öfter geübt, desto schneller entsteht der Perspektivwechsel spontan im Alltag',
+    ],
+  },
+
+  {
+    id: 'fokus-briefing',
+    name: 'Fokus Briefing',
+    category: 'mental',
+    duration: '5 Minuten',
+    shortDesc: '5-Min Morgenroutine – klare Intention und ein Schlüsselwort für den Tag setzen',
+    icon: '◎',
+    hasTimer: false,
+    source: 'Tom Sietas – Deine Atmung ändert alles',
+    intro: 'Das Fokus Briefing ist eine 5-minütige Morgenroutine, die deinen Tag bewusst startet. Du setzt eine klare Intention und wählst ein Schlüsselwort, das dich den ganzen Tag in deinem Zustand hält.',
+    steps: [
+      {
+        title: 'Ruhige Atmung – 1 Min',
+        text: 'Setze dich aufrecht hin, bevor du in den Tag startest. 1 Minute Kohärenzatmung oder einfach tiefes, langsames Atmen. Lass die Nacht los.',
+      },
+      {
+        title: 'Rückblick – Was lasse ich hinter mir?',
+        text: 'Frage dich: Was war gestern unfertig, belastend oder störend? Schreibe es auf oder benenne es innerlich. Dann: Bewusste Entscheidung, es heute hinter dir zu lassen.',
+      },
+      {
+        title: 'Intention formulieren',
+        text: 'Formuliere eine klare Absicht: "Heute möchte ich …" Nicht eine To-do-Liste. Eine Aussage darüber, wer du heute sein möchtest oder was dir wirklich wichtig ist. Ein Satz genügt.',
+      },
+      {
+        title: 'Schlüsselwort wählen',
+        text: 'Wähle ein Wort, das deine heutige Intention verkörpert. Beispiele: Ruhe, Fokus, Präsenz, Energie, Verbindung, Kreativität. Dieses Wort ist dein Anker für den Tag.',
+      },
+      {
+        title: 'Schlüsselwort verankern',
+        text: 'Spreche das Wort 3 Mal innerlich oder leise aus. Atme dazwischen tief. Spüre was das Wort in dir auslöst. Schreibe es auf dein Handgelenk oder als Notiz aufs Handy.',
+      },
+      {
+        title: 'Abschluss',
+        text: 'Ein tiefer Einatemzug. Beim Ausatmen: loslassen. Du bist bereit. Das Briefing ist abgeschlossen.',
+      },
+    ],
+    tips: [
+      'Täglich zur selben Zeit durchführen – am besten vor dem ersten Bildschirm',
+      'Das Schlüsselwort sichtbar aufschreiben (Notiz, Whiteboard, Handrücken)',
+      'Wenn du abschweifst: Schlüsselwort innerlich wiederholen',
+      'Kombiniere mit der DeepFlow Methode für eine 15-Min Morgenroutine',
+    ],
+  },
+
+  {
+    id: 'fuenf-finger-technik',
+    name: '5-Finger-Technik',
+    category: 'mental',
+    duration: '1–2 Minuten',
+    shortDesc: '5 Sinne als Anker – sofortige Erdung im Jetzt durch bewusste Sinneswahrnehmung',
+    icon: '✋',
+    hasTimer: false,
+    source: 'Tom Sietas – Deine Atmung ändert alles',
+    intro: 'Die 5-Finger-Technik nutzt die fünf Sinne als Anker in die Gegenwart. Bei Stress oder Überflutung durch Gedanken holt sie dich sofort ins Jetzt zurück – wirkungsvoll, unauffällig, jederzeit einsetzbar.',
+    steps: [
+      {
+        title: 'Vorbereitung',
+        text: 'Halte eine Hand offen vor dir oder lege sie auf den Oberschenkel. Atme einmal tief aus. Gehe jetzt Finger für Finger durch, ohne zu eilen.',
+      },
+      {
+        title: 'Daumen – SEHEN',
+        text: 'Berühre den Daumen und frage: Was sehe ich gerade wirklich? Benenne 3 Dinge, die du jetzt konkret siehst – Farben, Formen, Bewegungen. Nicht interpretieren, nur benennen. "Ich sehe die weiße Wand. Den Schatten des Fensters. Die Körnung des Tisches."',
+      },
+      {
+        title: 'Zeigefinger – HÖREN',
+        text: 'Berühre den Zeigefinger. Was hörst du gerade? Lausche bewusst: Geräusche nah und fern, laut und leise. Benenne 3 Geräusche konkret. Auch Stille ist ein Klang.',
+      },
+      {
+        title: 'Mittelfinger – FÜHLEN',
+        text: 'Berühre den Mittelfinger. Was spürst du körperlich? Die Kleidung auf der Haut, den Druck des Stuhls, die Temperatur der Luft. Nicht Emotionen – körperliche Empfindungen. Benenne 3.',
+      },
+      {
+        title: 'Ringfinger – RIECHEN',
+        text: 'Berühre den Ringfinger. Welche Gerüche nimmst du wahr? Auch wenn es schwach ist – nimm dir Zeit. Raumluft, eigene Haut, Kaffee, Holz. Benenne was da ist, auch wenn es "nichts Besonderes" ist.',
+      },
+      {
+        title: 'Kleiner Finger – SCHMECKEN',
+        text: 'Berühre den kleinen Finger. Was schmeckst du? Den letzten Schluck Kaffee, Zahnpasta, nichts, neutrales Mundgefühl. Lasse die Aufmerksamkeit kurz auf der Zunge ruhen.',
+      },
+      {
+        title: 'Abschluss – Atemzug',
+        text: 'Alle fünf Finger wurden besucht. Lege jetzt beide Hände auf die Knie. Ein langer, tiefer Atemzug. Beim Ausatmen: spüre, wie du geerdet und präsent bist. Der Gedankensturm ist leiser.',
+      },
+    ],
+    tips: [
+      'Funktioniert auch in Meetings – diskret mit einer Hand unter dem Tisch',
+      'Bei Panikattacken: sofort starten, nicht warten bis es schlimmer wird',
+      'Kombination mit 4-7-8 Atmung danach verstärkt die Wirkung',
+      'Kinder können die Technik ab ca. 6 Jahren lernen',
+    ],
+  },
+
+  {
+    id: 'gedankenstopp',
+    name: 'Gedankenstopp',
+    category: 'mental',
+    duration: '2–5 Minuten',
+    shortDesc: 'Gedankenspirale unterbrechen – 6 Schritte von der Eskalation zum klaren Fokus',
+    icon: '⊘',
+    hasTimer: false,
+    source: 'Tom Sietas – Deine Atmung ändert alles',
+    intro: 'Gedankenspiralen entstehen, wenn ein negativer Gedanke den nächsten auslöst – bis Körper und Geist im Alarmzustand sind. Der Gedankenstopp unterbricht diesen Kreislauf mit einem gezielten mentalen Eingriff.',
+    steps: [
+      {
+        title: 'Schritt 1: Eskalation erkennen',
+        text: 'Beobachte, wann Gedanken eskalieren. Typische Zeichen: du grübelst im Kreis, denkst in Katastrophenszenarien ("Was wäre wenn…"), spürst zunehmende körperliche Anspannung, Herzrasen oder Enge in der Brust. Das Erkennen ist der erste und wichtigste Schritt.',
+      },
+      {
+        title: 'Schritt 2: STOPP-Signal setzen',
+        text: 'Sobald du die Eskalation erkennst: Sage innerlich oder laut das Wort "STOPP". Klar. Direkt. Nicht als Frage, als Aussage. Du kannst gleichzeitig eine Hand flach auf die Brust legen oder auf den Tisch schlagen – der körperliche Anker verstärkt das Signal.',
+      },
+      {
+        title: 'Schritt 3: Einen Schritt zurücktreten',
+        text: 'Stelle dir bildlich vor, du trittst einen Schritt zurück aus der Situation. Du bist jetzt Beobachter deiner Gedanken, nicht Teil des Strudels. Die Gedanken sind wie Wolken, die du von einem Berg aus siehst – du bist nicht die Wolke.',
+      },
+      {
+        title: 'Schritt 4: Tief atmen',
+        text: 'Jetzt: Ein langer, tiefer Atemzug durch die Nase. Halte kurz an. Langsam durch den Mund ausatmen – doppelt so lang wie das Einatmen. Wiederhole 3 Mal. Das Nervensystem wechselt den Gang.',
+      },
+      {
+        title: 'Schritt 5: Fokus neu setzen',
+        text: 'Frage dich nach dem Ausatmen: "Was ist jetzt – in diesem Moment – wirklich wahr?" Nicht was könnte sein, nicht was gestern war. Was ist jetzt konkret, faktisch, real? Benenne es in einem Satz.',
+      },
+      {
+        title: 'Schritt 6: Weiter oder wiederholen',
+        text: 'Wenn der Gedankenfluss wieder klar ist: weiter machen. Wenn der Sog zurückkommt: sofort wieder ab Schritt 2. Je häufiger du übst, desto kleiner wird das Zeitfenster, in dem die Spirale dich hat.',
+      },
+    ],
+    tips: [
+      'Übe zuerst bei kleinen Ärgernissen – nicht bei der größten Krise',
+      'Das körperliche STOPP-Signal (Hand, Armband tippen) verstärkt die Unterbrechung',
+      'Kombiniere mit dem Fokus Briefing morgens, um den Tag robuster zu starten',
+      'Perfekt als Vorbereitung vor Apnoe-Training – kein mentales Rauschen',
+    ],
+  },
+
+  {
+    id: 'hand-auf-herz',
+    name: 'Hand-auf-Herz-Technik',
+    category: 'mental',
+    duration: '1–3 Minuten',
+    shortDesc: 'Selbstmitgefühl aktivieren – Wärme und Beruhigung durch Herzberührung',
+    icon: '♡',
+    hasTimer: false,
+    source: 'Tom Sietas – Deine Atmung ändert alles',
+    intro: 'Die Hand auf dem Herzen aktiviert das Selbstfürsorge-System im Gehirn. Schon die physische Berührung über dem Herzen senkt Cortisol und aktiviert Oxytocin – auch wenn du dich selbst berührst. Einfach, überall anwendbar, sofort wirksam.',
+    steps: [
+      {
+        title: 'Hand auf Herz legen',
+        text: 'Lege eine Hand flach auf deine Brust – über das Herz. Spüre den Kontakt: die Wärme der Hand, die Bewegung des Brustkorbs, den Herzschlag, wenn er spürbar ist. Keine spezielle Haltung nötig.',
+      },
+      {
+        title: 'Wärme spüren und einatmen',
+        text: 'Atme langsam und tief ein. Stelle dir vor, die Wärme deiner Hand fließt beim Einatmen in den Herzbereich – wie warmes Licht, das sich ausbreitet. Keine Anstrengung – nur wahrnehmen und empfangen.',
+      },
+      {
+        title: 'Langsam ausatmen',
+        text: 'Atme noch langsamer aus, als du eingeatmet hast. Beim Ausatmen: lass alles los, was du trägst. Die Hand bleibt auf dem Herzen. Spüre, wie sich Schultern und Kiefer entspannen.',
+      },
+      {
+        title: 'Freundlicher innerer Satz (optional)',
+        text: 'Wenn es sich richtig anfühlt: Sage dir innerlich einen freundlichen Satz. Zum Beispiel: "Es ist okay, so zu sein, wie ich bin." Oder: "Ich bin auf meiner Seite." Keine Bewertung, ob es "funktioniert" – nur sein lassen.',
+      },
+      {
+        title: '1 Minute – oder so lange wie nötig',
+        text: 'Bleibe mindestens 1 Minute so. Viele Menschen spüren nach 60 Sekunden eine spürbare Verschiebung – von Anspannung zu einer weicheren Offenheit. Wenn du mehr Zeit hast: bleib länger.',
+      },
+    ],
+    tips: [
+      'Kann unauffällig unter dem Tisch oder in der Tasche in der Westentasche durchgeführt werden',
+      'Besonders wirksam bei Selbstkritik und inneren Vorwürfen',
+      'Aus der Selbstmitgefühlsforschung von Dr. Kristin Neff belegt',
+      'Variante: Beide Hände übereinander legen für intensivere Wirkung',
     ],
   },
 ]

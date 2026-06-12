@@ -12,10 +12,11 @@ import {
   GOAL_SECONDS,
 } from '../../data/trainingPlan'
 import {
-  GOALS,
-  getModulesByGoal,
-  buildModuleSession,
-  getRecommendedModule,
+  TRAININGS,
+  getTraining,
+  getTrainingForType,
+  buildTrainingSession,
+  getDefaultLevelId,
 } from '../../data/trainingModules'
 import AddSession from './AddSession'
 import WeeklyPlan from './WeeklyPlan'
@@ -34,18 +35,17 @@ const STEP_DOT_COLORS = {
   pink:   'bg-pink-400',
 }
 
-const GOAL_DOT = { apnoe: 'bg-blue-400', hrv: 'bg-teal-400', brustkorb: 'bg-cyan-400', basis: 'bg-indigo-400' }
-const LEGACY_DOT = { CO2: 'bg-blue-400', O2: 'bg-teal-400', MUSKEL: 'bg-purple-400', FLEX: 'bg-slate-400' }
-const LEGACY_LABEL = { CO2: 'CO₂-Tabelle', O2: 'O₂-Tabelle', MUSKEL: 'Atemmuskeltraining', FLEX: 'Freies Training' }
+const TYPE_DOT = { GRUND: 'bg-blue-400', CO2: 'bg-blue-400', O2: 'bg-teal-400', MUSKEL: 'bg-purple-400', FLEX: 'bg-slate-400' }
+const TYPE_LABEL = { GRUND: 'Atemanhalten Grundlagen', CO2: 'CO₂-Tabelle', O2: 'O₂-Tabelle', MUSKEL: 'Atemmuskeltraining', FLEX: 'Flex' }
 
 function formatDate(isoStr) {
   return new Date(isoStr).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' })
 }
 function sessionTypeLabel(s) {
-  return s.label || LEGACY_LABEL[s.type] || s.type
+  return s.label || TYPE_LABEL[s.type] || s.type
 }
 function sessionDot(s) {
-  return GOAL_DOT[s.goal] || LEGACY_DOT[s.type] || 'bg-slate-400'
+  return TYPE_DOT[s.type] || (s.goal === 'apnoe' ? 'bg-blue-400' : 'bg-slate-400')
 }
 
 function StatCard({ label, value, sub, color = 'blue', icon }) {
@@ -68,32 +68,47 @@ function StatCard({ label, value, sub, color = 'blue', icon }) {
   )
 }
 
-function NextSessionCard({ module, dayLabel, onStart, onManual, onPick }) {
-  if (!module) return null
-  const goal = GOALS[module.goal] || GOALS.basis
-  const dot = STEP_DOT_COLORS[module.color] || 'bg-slate-400'
+// Übersicht: Aufwärmen + Hauptübung eines Trainings
+function TrainingOverview({ training, dot }) {
+  return (
+    <div className="px-4 py-3 space-y-2">
+      <div className="flex items-center gap-3">
+        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-indigo-400" />
+        <p className="text-sm text-slate-300 flex-1 min-w-0">Aufwärmen · Zwerchfellatmung</p>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-cyan-400" />
+        <p className="text-sm text-slate-300 flex-1 min-w-0">Aufwärmen · Brustkorbdehnung <span className="text-slate-500">(Stufe wählbar)</span></p>
+      </div>
+      <div className="flex items-center gap-3">
+        <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dot}`} />
+        <p className="text-sm text-slate-200 flex-1 min-w-0 font-medium">
+          {training.name}
+          {training.levels && <span className="text-slate-500 font-normal"> · {training.levels.length} Stufen</span>}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function NextSessionCard({ training, dayLabel, onStart, onManual, onPick }) {
+  if (!training) return null
+  const dot = STEP_DOT_COLORS[training.color] || 'bg-slate-400'
 
   return (
     <div className="rounded-2xl border border-blue-800/30 bg-slate-800/50 overflow-hidden">
       <div className="px-4 py-3 border-b border-slate-700/30 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="text-xs text-slate-500 uppercase tracking-widest">Empfehlung für {dayLabel.toLowerCase()}</p>
-          <p className="text-base font-bold mt-0.5 truncate text-blue-200">{module.name}</p>
-          <p className="text-xs text-slate-500 mt-0.5">{goal.label}</p>
+          <p className="text-base font-bold mt-0.5 truncate text-blue-200">{training.name}</p>
+          <p className="text-xs text-slate-500 mt-0.5">{training.shortDesc}</p>
         </div>
         <span className="text-xs bg-blue-500/15 text-blue-300 border border-blue-500/25 px-2.5 py-1 rounded-full flex-shrink-0">
-          {dayLabel} · {module.durationLabel}
+          {dayLabel} · {training.durationLabel}
         </span>
       </div>
 
-      <div className="px-4 py-3 space-y-2">
-        {module.steps.map((step, i) => (
-          <div key={i} className="flex items-center gap-3">
-            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dot}`} />
-            <p className="text-sm text-slate-200 flex-1 min-w-0">{step.title}</p>
-          </div>
-        ))}
-      </div>
+      <TrainingOverview training={training} dot={dot} />
 
       <div className="px-4 pb-3 space-y-2">
         <button
@@ -124,69 +139,103 @@ function NextSessionCard({ module, dayLabel, onStart, onManual, onPick }) {
   )
 }
 
-const GOAL_ORDER = ['apnoe', 'brustkorb', 'hrv', 'basis']
-const GOAL_ICON = { apnoe: '🫁', brustkorb: '❋', hrv: '♡', basis: '◈' }
-
-function LibraryModal({ onStart, onClose }) {
-  const byGoal = useMemo(() => getModulesByGoal(), [])
-  const [openGoal, setOpenGoal] = useState('apnoe')
+// Bottom-Sheet: Training starten – Stufe wählen (falls vorhanden)
+function TrainingStartSheet({ training, defaultLevelId, onStart, onClose }) {
+  const [levelId, setLevelId] = useState(defaultLevelId ?? getDefaultLevelId(training))
+  const dot = STEP_DOT_COLORS[training.color] || 'bg-slate-400'
+  const hasLevels = !!training.levels
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-end" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+    <div className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm flex items-end" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
       <div className="w-full max-w-lg mx-auto bg-[#0a1526] rounded-t-3xl border-t border-slate-700/50 p-6 pb-10 max-h-[85vh] overflow-y-auto">
-        <div className="flex items-center justify-between mb-1 sticky top-0 -mt-1 pt-1 bg-[#0a1526]">
-          <h2 className="text-lg font-semibold text-white">Trainingsbibliothek</h2>
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-lg font-semibold text-white">{training.name}</h2>
           <button onClick={onClose} className="text-slate-400 hover:text-white">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
               <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
         </div>
-        <p className="text-xs text-slate-500 mb-4">Jedes Training jederzeit startbar – unabhängig vom Wochenplan.</p>
+        <p className="text-xs text-slate-500 mb-4">Startet mit Zwerchfellatmung & Brustkorbdehnung, danach die Hauptübung.</p>
 
-        <div className="space-y-3">
-          {GOAL_ORDER.map(gid => {
-            const g = GOALS[gid]
-            const mods = byGoal[gid] || []
-            const open = openGoal === gid
+        {hasLevels ? (
+          <>
+            <p className="text-xs text-slate-400 uppercase tracking-widest mb-2">Stufe wählen</p>
+            <div className="space-y-2 mb-5">
+              {training.levels.map(l => {
+                const active = l.id === levelId
+                return (
+                  <button
+                    key={l.id}
+                    onClick={() => setLevelId(l.id)}
+                    className={`w-full text-left p-3 rounded-xl border transition-all ${
+                      active ? 'border-blue-500/60 bg-blue-500/15' : 'border-slate-700/40 bg-slate-800/50 hover:border-slate-500'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className={`text-sm font-semibold ${active ? 'text-blue-200' : 'text-slate-200'}`}>{l.name}</span>
+                      {active && <span className={`w-2.5 h-2.5 rounded-full ${dot}`} />}
+                    </div>
+                    <p className="text-xs text-slate-500 mt-0.5">{l.shortDesc}</p>
+                  </button>
+                )
+              })}
+            </div>
+          </>
+        ) : (
+          <div className="rounded-xl border border-teal-800/30 bg-teal-900/10 p-3.5 mb-5">
+            <p className="text-xs text-teal-300 leading-relaxed">{training.shortDesc} Die Basis-Haltezeit stellst du am Timer per +/- ein.</p>
+          </div>
+        )}
+
+        <button
+          onClick={() => onStart(hasLevels ? levelId : null)}
+          className="w-full py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-base transition-colors active:scale-95 flex items-center justify-center gap-2"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4"><path d="M5 3l14 9-14 9V3z"/></svg>
+          Training starten
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Bottom-Sheet: Trainingsbibliothek – eines der 4 Trainings wählen
+function TrainingPicker({ onPick, onClose }) {
+  return (
+    <div className="fixed inset-0 z-[60] bg-black/70 backdrop-blur-sm flex items-end" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div className="w-full max-w-lg mx-auto bg-[#0a1526] rounded-t-3xl border-t border-slate-700/50 p-6 pb-10 max-h-[85vh] overflow-y-auto">
+        <div className="flex items-center justify-between mb-1">
+          <h2 className="text-lg font-semibold text-white">Training wählen</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-white">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
+              <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <p className="text-xs text-slate-500 mb-4">Jedes Training startet mit Zwerchfellatmung & Brustkorbdehnung.</p>
+
+        <div className="space-y-2.5">
+          {TRAININGS.map(t => {
+            const dot = STEP_DOT_COLORS[t.color] || 'bg-slate-400'
             return (
-              <div key={gid} className="rounded-xl border border-slate-700/40 overflow-hidden">
-                <button
-                  onClick={() => setOpenGoal(open ? null : gid)}
-                  className="w-full flex items-center justify-between px-4 py-3 bg-slate-800/40"
-                >
-                  <span className="flex items-center gap-2.5">
-                    <span className="text-lg">{GOAL_ICON[gid]}</span>
-                    <span className="text-left">
-                      <span className="block text-sm font-semibold text-white">{g.label}</span>
-                      <span className="block text-xs text-slate-500">{g.sub} · {mods.length} Übungen</span>
-                    </span>
-                  </span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={`w-4 h-4 text-slate-500 transition-transform ${open ? 'rotate-180' : ''}`}>
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </button>
-                {open && (
-                  <div className="divide-y divide-slate-700/30">
-                    {mods.map(m => (
-                      <div key={m.id} className="flex items-center gap-3 px-4 py-3">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-slate-200">{m.name}</p>
-                          <p className="text-xs text-slate-500 leading-snug">{m.shortDesc}</p>
-                          <p className="text-[10px] text-slate-600 mt-0.5">{m.durationLabel}</p>
-                        </div>
-                        <button
-                          onClick={() => { onStart(m.id); onClose() }}
-                          className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold transition-colors"
-                        >
-                          <svg viewBox="0 0 24 24" fill="currentColor" className="w-3 h-3"><path d="M5 3l14 9-14 9V3z"/></svg>
-                          Start
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <button
+                key={t.id}
+                onClick={() => onPick(t.id)}
+                className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border border-slate-700/40 bg-slate-800/40 hover:border-slate-500 transition-all"
+              >
+                <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${dot}`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-200">{t.name}</p>
+                  <p className="text-xs text-slate-500 leading-snug">{t.shortDesc}</p>
+                  <p className="text-[10px] text-slate-600 mt-0.5">
+                    {t.durationLabel}{t.levels ? ` · ${t.levels.length} Stufen` : ''}
+                  </p>
+                </div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-slate-500 flex-shrink-0">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </button>
             )
           })}
         </div>
@@ -200,8 +249,11 @@ export default function TrainingPage() {
   const [baseHold, setBaseHold] = useLocalStorage('deepflow_base', INITIAL_BASE)
   // overrides keyed by dayIndex (0-6). Stored as object.
   const [overrides, setOverrides] = useLocalStorage('deepflow_plan_overrides', {})
+  // zuletzt gewählte Stufe je Training (manuelle Progression)
+  const [levels, setLevels] = useLocalStorage('deepflow_levels', {})
   const [showAdd, setShowAdd] = useState(false)
   const [showPicker, setShowPicker] = useState(false)
+  const [pendingTrainingId, setPendingTrainingId] = useState(null)
   const [activeTab, setActiveTab] = useState('dashboard')
   const [activeSession, setActiveSession] = useState(null)
 
@@ -214,11 +266,11 @@ export default function TrainingPage() {
     [sessions, baseHold]
   )
   const apnoeCount = useMemo(() => sessions.filter(isApnoeSession).length, [sessions])
-  const brustkorbCount = useMemo(() => sessions.filter(s => s.goal === 'brustkorb').length, [sessions])
+  const muskelCount = useMemo(() => sessions.filter(s => s.type === 'MUSKEL').length, [sessions])
   const nextInfo = useMemo(() => getNextSession(sessions, overrides), [sessions, overrides])
   const adjustedBase = useMemo(() => computeAdjustedBase(sessions, baseHold), [sessions, baseHold])
   const progress = useMemo(() => getProgressPercent(bestHold, INITIAL_BASE), [bestHold])
-  const weekPlan = useMemo(() => getWeeklyPlan(adjustedBase, overrides), [adjustedBase, overrides])
+  const weekPlan = useMemo(() => getWeeklyPlan(overrides), [overrides])
 
   const recentSessions = useMemo(
     () => [...sessions].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 10),
@@ -235,13 +287,19 @@ export default function TrainingPage() {
     setShowAdd(false)
   }
 
-  const startModule = (moduleId) => {
-    const session = buildModuleSession(moduleId)
-    if (session) setActiveSession(session)
+  // Öffnet das Start-Sheet (Stufenwahl) für ein Training
+  const openTraining = (trainingId) => {
+    setShowPicker(false)
+    setPendingTrainingId(trainingId)
   }
 
-  const handleStartTraining = () => {
-    if (nextModule) startModule(nextModule.id)
+  const startTraining = (trainingId, levelId) => {
+    const session = buildTrainingSession(trainingId, levelId)
+    if (session) {
+      if (levelId != null) setLevels(prev => ({ ...prev, [trainingId]: levelId }))
+      setActiveSession(session)
+    }
+    setPendingTrainingId(null)
   }
 
   const handleSwapDay = (dayIndex, newType) => {
@@ -269,12 +327,14 @@ export default function TrainingPage() {
     setSessions(prev => prev.filter(s => s !== target))
   }
 
-  // Tagesempfehlung als Modul
-  const nextModule = useMemo(
-    () => (nextInfo && !nextInfo.isRest ? getRecommendedModule(nextInfo.type) : null),
+  // Tagesempfehlung als Training
+  const nextTraining = useMemo(
+    () => (nextInfo && nextInfo.isTraining ? getTrainingForType(nextInfo.type) : null),
     [nextInfo]
   )
   const dayLabel = nextInfo?.isToday ? 'Heute' : nextInfo?.daysUntil === 1 ? 'Morgen' : `In ${nextInfo?.daysUntil} Tagen`
+
+  const pendingTraining = pendingTrainingId ? getTraining(pendingTrainingId) : null
 
   return (
     <div className="flex flex-col min-h-full">
@@ -391,9 +451,9 @@ export default function TrainingPage() {
 
             {/* Tagesempfehlung */}
             <NextSessionCard
-              module={nextModule}
+              training={nextTraining}
               dayLabel={dayLabel}
-              onStart={handleStartTraining}
+              onStart={() => nextTraining && openTraining(nextTraining.id)}
               onManual={() => setShowAdd(true)}
               onPick={() => setShowPicker(true)}
             />
@@ -404,7 +464,7 @@ export default function TrainingPage() {
               className="w-full py-3 rounded-xl border border-slate-700/50 bg-slate-800/30 text-slate-300 text-sm font-medium hover:border-slate-500 transition-colors flex items-center justify-center gap-2"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-              Trainingsbibliothek öffnen
+              Anderes Training wählen
             </button>
 
             {/* Stats grid */}
@@ -431,11 +491,11 @@ export default function TrainingPage() {
                 icon="🫁"
               />
               <StatCard
-                label="Brustkorb"
-                value={brustkorbCount}
-                sub="Dehnung & Faszien"
+                label="Atemmuskel"
+                value={muskelCount}
+                sub="Kraft-Einheiten"
                 color="purple"
-                icon="❋"
+                icon="◈"
               />
             </div>
 
@@ -470,9 +530,9 @@ export default function TrainingPage() {
                 <p className="text-sm text-slate-500 mb-4">
                   Starte mit der ersten Trainingseinheit und verfolge deinen Fortschritt Richtung 3 Minuten.
                 </p>
-                {nextInfo && !nextInfo.isRest && nextInfo.isToday ? (
+                {nextTraining ? (
                   <button
-                    onClick={handleStartTraining}
+                    onClick={() => openTraining(nextTraining.id)}
                     className="bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors flex items-center gap-2 mx-auto"
                   >
                     <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
@@ -524,11 +584,11 @@ export default function TrainingPage() {
                 4 Trainings pro Woche · flexibel anpassbar
               </p>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Mo · Mi · Fr · Sa sind als Trainingstage geplant. Di, Do und So sind Flex- bzw. Ruhetage. Tippe einen Tag an und wechsle das Training, wenn du einen Tag verpasst.
+                Mo (Grundlagen) · Mi (CO₂) · Fr (O₂) · Sa (Atemmuskel) sind als Trainingstage geplant. Di, Do und So sind Flex- bzw. Ruhetage. Tippe einen Tag an, um zu starten oder das Training zu wechseln.
               </p>
             </div>
 
-            <WeeklyPlan weekPlan={weekPlan} onSwap={handleSwapDay} />
+            <WeeklyPlan weekPlan={weekPlan} onSwap={handleSwapDay} onStart={openTraining} />
           </div>
         )}
 
@@ -600,16 +660,25 @@ export default function TrainingPage() {
 
       {showAdd && (
         <AddSession
-          suggestedType={['CO2','O2','MUSKEL'].includes(nextInfo?.type) ? nextInfo.type : 'CO2'}
+          suggestedType={['GRUND','CO2','O2','MUSKEL'].includes(nextInfo?.type) ? nextInfo.type : 'CO2'}
           onSave={handleSave}
           onCancel={() => setShowAdd(false)}
         />
       )}
 
       {showPicker && (
-        <LibraryModal
-          onStart={startModule}
+        <TrainingPicker
+          onPick={openTraining}
           onClose={() => setShowPicker(false)}
+        />
+      )}
+
+      {pendingTraining && (
+        <TrainingStartSheet
+          training={pendingTraining}
+          defaultLevelId={levels[pendingTraining.id]}
+          onStart={(levelId) => startTraining(pendingTraining.id, levelId)}
+          onClose={() => setPendingTrainingId(null)}
         />
       )}
 
